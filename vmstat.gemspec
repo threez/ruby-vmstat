@@ -13,7 +13,7 @@ Gem::Specification.new do |gem|
     cpu, network, load avg and disk information
   }
   gem.summary       = %q{A focused and fast library t gather system information}
-  gem.homepage      = "https://github.com/threez/ruby-vmstat"
+  gem.homepage      = "http://threez.github.com/ruby-vmstat/"
 
   gem.files         = `git ls-files`.split($/)
   gem.executables   = gem.files.grep(%r{^bin/}).map{ |f| File.basename(f) }
