@@ -103,7 +103,8 @@ VALUE method_cpu(VALUE self) {
     PROCESSOR_CPU_LOAD_INFO, &numCPUsU, &cpuInfo, &numCpuInfo);
 
   if(err == KERN_SUCCESS) {
-    for(unsigned i = 0U; i < numCPUsU; ++i) {
+    unsigned i;
+    for(i = 0U; i < numCPUsU; ++i) {
       VALUE cpu = rb_hash_new();
       int pos = CPU_STATE_MAX * i;
       rb_hash_aset(cpu, SYM_USER, ULL2NUM(cpuInfo[pos + CPU_STATE_USER]));
