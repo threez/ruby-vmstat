@@ -39,13 +39,15 @@
 <li>
 <em>Memory</em> (free, active, ...)</li>
 <li>
-<em>Network Devices</em> (name, in bytes, out bytes, ...)</li>
+<em>Network Interfaces</em> (name, in bytes, out bytes, ...)</li>
 <li>
 <em>CPU</em> (user, system, nice, idle)</li>
 <li>
 <em>Load</em> Average</li>
 <li>
 <em>Disk</em> (type, disk path, free bytes, total bytes, ...)</li>
+<li>
+<em>Current Task</em> (used bytes and usage time <em>MAC OS X ONLY</em>)</li>
 </ul><p><em>It currently supports:</em></p>
 
 <ul>
@@ -75,125 +77,106 @@
 
 <h2>Usage</h2>
 
-<p>Just require the library.</p>
+<p>Just require the library and make a snapshot or use the distinct methods to just capture parts of the statistics.</p>
 
 <pre><code>require "vmstat"
-</code></pre>
-
-<h3>Memory</h3>
-
-<pre><code>Vmstat.memory # =&gt; {...}
-</code></pre>
-
-<p>The result might look like this:</p>
-
-<pre><code>{:pagesize=&gt;4096,
- :wired=&gt;668069,
- :active=&gt;185474,
- :inactive=&gt;546881,
- :free=&gt;694851,
- :wired_bytes=&gt;2240024576,
- :active_bytes=&gt;2736410624,
- :inactive_bytes=&gt;759701504,
- :free_bytes=&gt;2846109696,
- :zero_filled=&gt;176898850,
- :reactivated=&gt;41013,
- :purgeable=&gt;344211,
- :purged=&gt;11580,
- :pageins=&gt;2254222,
- :pageouts=&gt;0,
- :faults=&gt;204524839,
- :copy_on_write_faults=&gt;14379007,
- :lookups=&gt;2255061,
- :hits=&gt;95}
-</code></pre>
-
-<h3>Network Devices</h3>
-
-<pre><code>Vmstat.network # =&gt; {...}
-</code></pre>
-
-<p>The result might look like this:</p>
-
-<pre><code>{:lo0=&gt;
-  {:in_bytes=&gt;9082607,
-   :in_errors=&gt;0,
-   :in_drops=&gt;0,
-   :out_bytes=&gt;9082607,
-   :out_errors=&gt;0,
-   :type=&gt;24},
- :gif0=&gt;
-  {:in_bytes=&gt;0,
-   :in_errors=&gt;0,
-   :in_drops=&gt;0,
-   :out_bytes=&gt;0,
-   :out_errors=&gt;0,
-   :type=&gt;55},
- :stf0=&gt;
-  {:in_bytes=&gt;0,
-   :in_errors=&gt;0,
-   :in_drops=&gt;0,
-   :out_bytes=&gt;0,
-   :out_errors=&gt;0,
-   :type=&gt;57},
- :en0=&gt;
-  {:in_bytes=&gt;7108891975,
-   :in_errors=&gt;0,
-   :in_drops=&gt;0,
-   :out_bytes=&gt;479503412,
-   :out_errors=&gt;0,
-   :type=&gt;6},
- :p2p0=&gt;
-  {:in_bytes=&gt;0,
-   :in_errors=&gt;0,
-   :in_drops=&gt;0,
-   :out_bytes=&gt;0,
-   :out_errors=&gt;0,
-   :type=&gt;6}}
-</code></pre>
-
-<h3>CPU</h3>
-
-<pre><code>Vmstat.cpu # =&gt; [...]
-</code></pre>
-
-<p>The result might look like this, depending on the number of cpus:</p>
-
-<pre><code>[{:user=&gt;297003, :system=&gt;475804, :nice=&gt;0, :idle=&gt;11059640},
- {:user=&gt;23349,  :system=&gt;14186,  :nice=&gt;0, :idle=&gt;11792093},
- {:user=&gt;247171, :system=&gt;195309, :nice=&gt;0, :idle=&gt;11387262},
- {:user=&gt;21783,  :system=&gt;12823,  :nice=&gt;0, :idle=&gt;11794993},
- {:user=&gt;221323, :system=&gt;163723, :nice=&gt;0, :idle=&gt;11444653},
- {:user=&gt;20608,  :system=&gt;11808,  :nice=&gt;0, :idle=&gt;11797154},
- {:user=&gt;195015, :system=&gt;145772, :nice=&gt;0, :idle=&gt;11488869},
- {:user=&gt;19793,  :system=&gt;11077,  :nice=&gt;0, :idle=&gt;11798671}]
-</code></pre>
-
-<h3>Load</h3>
-
-<pre><code>Vmstat.load_avg #=&gt; [0.35791015625, 0.4296875, 0.4609375]
-</code></pre>
-
-<h3>Disk</h3>
-
-<p>To get the disk data one can pass the mount point or the device name.</p>
-
-<pre><code># like so
-Vmstat.disk("/") # =&gt; {...}
-
-# or so
-Vmstat.disk("/dev/disk0s2") # =&gt; {...}
-</code></pre>
-
-<p>The result looks like this:</p>
-
-<pre><code>{:type              =&gt;  :devfs,
- :origin            =&gt;  "devfs",
- :mount             =&gt;  "/dev",
- :free_bytes        =&gt;  0,
- :available_bytes   =&gt;  0,
- :used_bytes        =&gt;  192000,
- :total_bytes       =&gt;  192000}
+require "pp"
+Vmstat.snapshot # =&gt; #&lt;Vmstat::Snapshot:0x007fe5f22df660
+#    @at=2012-10-09 21:48:57 +0200,
+#    @boot_time=2012-10-09 18:42:37 +0200,
+#    @cpu=
+#     [#&lt;struct Vmstat::Cpu
+#       num=0,
+#       user=187167,
+#       system=144466,
+#       nice=0,
+#       idle=786622&gt;,
+#      #&lt;struct Vmstat::Cpu num=1, user=2819, system=1641, nice=0, idle=1113782&gt;,
+#      #&lt;struct Vmstat::Cpu num=2, user=158698, system=95186, nice=0, idle=864359&gt;,
+#      #&lt;struct Vmstat::Cpu num=3, user=2702, system=1505, nice=0, idle=1114035&gt;,
+#      #&lt;struct Vmstat::Cpu num=4, user=140231, system=78248, nice=0, idle=899764&gt;,
+#      #&lt;struct Vmstat::Cpu num=5, user=2468, system=1314, nice=0, idle=1114460&gt;,
+#      #&lt;struct Vmstat::Cpu num=6, user=120764, system=66284, nice=0, idle=931195&gt;,
+#      #&lt;struct Vmstat::Cpu num=7, user=2298, system=1207, nice=0, idle=1114737&gt;],
+#    @disks=
+#     [#&lt;struct Vmstat::Disk
+#       type=:hfs,
+#       origin="/dev/disk0s2",
+#       mount="/",
+#       block_size=4096,
+#       free_blocks=51470668,
+#       available_blocks=51406668,
+#       total_blocks=61069442&gt;],
+#    @load_average=
+#     #&lt;struct Vmstat::LoadAverage
+#      one_minute=1.74072265625,
+#      five_minutes=1.34326171875,
+#      fifteen_minutes=1.1845703125&gt;,
+#    @memory=
+#     #&lt;struct Vmstat::Memory
+#      pagesize=4096,
+#      wired=1037969,
+#      active=101977,
+#      inactive=484694,
+#      free=470582,
+#      pageins=102438,
+#      pageouts=0,
+#      zero_filled=930821373,
+#      reactivated=33,
+#      purgeable=88184,
+#      purged=0,
+#      faults=90277275,
+#      copy_on_write_faults=668693,
+#      lookups=516021,
+#      hits=17&gt;,
+#    @network_interfaces=
+#     [#&lt;struct Vmstat::NetworkInterface
+#       name=:lo0,
+#       in_bytes=6209398,
+#       in_errors=0,
+#       in_drops=0,
+#       out_bytes=6209398,
+#       out_errors=0,
+#       type=24&gt;,
+#      #&lt;struct Vmstat::NetworkInterface
+#       name=:gif0,
+#       in_bytes=0,
+#       in_errors=0,
+#       in_drops=0,
+#       out_bytes=0,
+#       out_errors=0,
+#       type=55&gt;,
+#      #&lt;struct Vmstat::NetworkInterface
+#       name=:stf0,
+#       in_bytes=0,
+#       in_errors=0,
+#       in_drops=0,
+#       out_bytes=0,
+#       out_errors=0,
+#       type=57&gt;,
+#      #&lt;struct Vmstat::NetworkInterface
+#       name=:en0,
+#       in_bytes=1321276010,
+#       in_errors=0,
+#       in_drops=0,
+#       out_bytes=410426678,
+#       out_errors=0,
+#       type=6&gt;,
+#      #&lt;struct Vmstat::NetworkInterface
+#       name=:p2p0,
+#       in_bytes=0,
+#       in_errors=0,
+#       in_drops=0,
+#       out_bytes=0,
+#       out_errors=0,
+#       type=6&gt;],
+#    @task=
+#     #&lt;struct Vmstat::Task
+#      suspend_count=0,
+#      virtual_size=2551554048,
+#      resident_size=19628032,
+#      user_time_ms=28,
+#      system_time_ms=83&gt;&gt;
 </code></pre>
 
 <h2>Contributing</h2>
