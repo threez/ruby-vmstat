@@ -8,66 +8,30 @@
 #include <sys/mount.h>
 #if defined(__APPLE__)
 #include <mach/mach.h>
+#include <mach/mach_host.h>
 #endif
 #include <vmstat.h>
+
+// helper methodsd
+int system_int(const char *);
+unsigned long long system_ull(const char *);
 
 void Init_vmstat() {
   vmstat = rb_define_module("Vmstat");
 
-  rb_define_singleton_method(vmstat, "network", method_network, 0);
-  rb_define_singleton_method(vmstat, "cpu", method_cpu, 0);
-  rb_define_singleton_method(vmstat, "memory", method_memory, 0);
-  rb_define_singleton_method(vmstat, "disk", method_disk, 1);
-  rb_define_singleton_method(vmstat, "load_avg", method_load_avg, 0);
-  rb_define_singleton_method(vmstat, "boot_time", method_boot_time, 0);
-
-  // widely used symbols
-  SYM_TYPE = ID2SYM(rb_intern("type"));
-  SYM_FREE = ID2SYM(rb_intern("free"));
-
-  // network symbols
-  SYM_IN_BYTES = ID2SYM(rb_intern("in_bytes"));
-  SYM_IN_ERRORS = ID2SYM(rb_intern("in_errors"));
-  SYM_IN_DROPS = ID2SYM(rb_intern("in_drops"));
-  SYM_OUT_BYTES = ID2SYM(rb_intern("out_bytes"));
-  SYM_OUT_ERRORS = ID2SYM(rb_intern("out_errors"));
-
-  // cpu symbols
-  SYM_USER = ID2SYM(rb_intern("user"));
-  SYM_SYSTEM = ID2SYM(rb_intern("system"));
-  SYM_NICE = ID2SYM(rb_intern("nice"));
-  SYM_IDLE = ID2SYM(rb_intern("idle"));
-
-  // memory symbols
-  SYM_PAGESIZE = ID2SYM(rb_intern("pagesize"));
-  SYM_WIRED = ID2SYM(rb_intern("wired"));
-  SYM_ACTIVE = ID2SYM(rb_intern("active"));
-  SYM_INACTIVE = ID2SYM(rb_intern("inactive"));
-  SYM_WIRED_BYTES = ID2SYM(rb_intern("wired_bytes"));
-  SYM_ACTIVE_BYTES = ID2SYM(rb_intern("active_bytes"));
-  SYM_INACTIVE_BYTES = ID2SYM(rb_intern("inactive_bytes"));
-  SYM_FREE_BYTES = ID2SYM(rb_intern("free_bytes"));
-  SYM_ZERO_FILLED = ID2SYM(rb_intern("zero_filled"));
-  SYM_REACTIVATED = ID2SYM(rb_intern("reactivated"));
-  SYM_PURGEABLE = ID2SYM(rb_intern("purgeable"));
-  SYM_PURGED = ID2SYM(rb_intern("purged"));
-  SYM_PAGEINS = ID2SYM(rb_intern("pageins"));
-  SYM_PAGEOUTS = ID2SYM(rb_intern("pageouts"));
-  SYM_FAULTS = ID2SYM(rb_intern("faults"));
-  SYM_COW_FAULTS = ID2SYM(rb_intern("copy_on_write_faults"));
-  SYM_LOOKUPS = ID2SYM(rb_intern("lookups"));
-  SYM_HITS = ID2SYM(rb_intern("hits"));
-
-  // disk symbols
-  SYM_ORIGIN = ID2SYM(rb_intern("origin"));
-  SYM_MOUNT = ID2SYM(rb_intern("mount"));
-  SYM_AVAILABLE_BYTES = ID2SYM(rb_intern("available_bytes"));
-  SYM_USED_BYTES = ID2SYM(rb_intern("used_bytes"));
-  SYM_TOTAL_BYTES = ID2SYM(rb_intern("total_bytes"));
+  rb_define_singleton_method(vmstat, "network_interfaces", vmstat_network_interfaces, 0);
+  rb_define_singleton_method(vmstat, "cpu", vmstat_cpu, 0);
+  rb_define_singleton_method(vmstat, "memory", vmstat_memory, 0);
+  rb_define_singleton_method(vmstat, "disk", vmstat_disk, 1);
+  rb_define_singleton_method(vmstat, "load_average", vmstat_load_average, 0);
+  rb_define_singleton_method(vmstat, "boot_time", vmstat_boot_time, 0);
+#if defined(__APPLE__)
+  rb_define_singleton_method(vmstat, "task", vmstat_task, 0);
+#endif
 }
 
-VALUE method_network(VALUE self) {
-  VALUE devices = rb_hash_new();
+VALUE vmstat_network_interfaces(VALUE self) {
+  VALUE devices = rb_ary_new();
   int i, err;
   struct ifmibdata mibdata;
   size_t len = sizeof(mibdata);
@@ -79,14 +43,16 @@ VALUE method_network(VALUE self) {
     ifmib_path[4] = i; // set the current row
     err = sysctl(ifmib_path, 6, &mibdata, &len, NULL, 0);
     if (err == 0) {
-      VALUE device = rb_hash_new();
-      rb_hash_aset(device, SYM_IN_BYTES, ULL2NUM(mibdata.ifmd_data.ifi_ibytes));
-      rb_hash_aset(device, SYM_IN_ERRORS, ULL2NUM(mibdata.ifmd_data.ifi_ierrors));
-      rb_hash_aset(device, SYM_IN_DROPS, ULL2NUM(mibdata.ifmd_data.ifi_iqdrops));
-      rb_hash_aset(device, SYM_OUT_BYTES, ULL2NUM(mibdata.ifmd_data.ifi_obytes));
-      rb_hash_aset(device, SYM_OUT_ERRORS, ULL2NUM(mibdata.ifmd_data.ifi_oerrors));
-      rb_hash_aset(device, SYM_TYPE, ULL2NUM(mibdata.ifmd_data.ifi_type));
-      rb_hash_aset(devices, ID2SYM(rb_intern(mibdata.ifmd_name)), device);
+      VALUE device = rb_funcall(rb_path2class("Vmstat::NetworkInterface"),
+                     rb_intern("new"), 7, ID2SYM(rb_intern(mibdata.ifmd_name)),
+                                          ULL2NUM(mibdata.ifmd_data.ifi_ibytes),
+                                          ULL2NUM(mibdata.ifmd_data.ifi_ierrors),
+                                          ULL2NUM(mibdata.ifmd_data.ifi_iqdrops),
+                                          ULL2NUM(mibdata.ifmd_data.ifi_obytes),
+                                          ULL2NUM(mibdata.ifmd_data.ifi_oerrors),
+                                          ULL2NUM(mibdata.ifmd_data.ifi_type));
+
+      rb_ary_push(devices, device);
     }
   }
 
@@ -94,7 +60,7 @@ VALUE method_network(VALUE self) {
 }
 
 #if defined(__APPLE__)
-VALUE method_cpu(VALUE self) {
+VALUE vmstat_cpu(VALUE self) {
   VALUE cpus = rb_ary_new();
   processor_info_array_t cpuInfo;
   mach_msg_type_number_t numCpuInfo;
@@ -104,21 +70,29 @@ VALUE method_cpu(VALUE self) {
 
   if(err == KERN_SUCCESS) {
     unsigned i;
+
     for(i = 0U; i < numCPUsU; ++i) {
-      VALUE cpu = rb_hash_new();
       int pos = CPU_STATE_MAX * i;
-      rb_hash_aset(cpu, SYM_USER, ULL2NUM(cpuInfo[pos + CPU_STATE_USER]));
-      rb_hash_aset(cpu, SYM_SYSTEM, ULL2NUM(cpuInfo[pos + CPU_STATE_SYSTEM]));
-      rb_hash_aset(cpu, SYM_NICE, ULL2NUM(cpuInfo[pos + CPU_STATE_NICE]));
-      rb_hash_aset(cpu, SYM_IDLE, ULL2NUM(cpuInfo[pos + CPU_STATE_IDLE]));
+      VALUE cpu = rb_funcall(rb_path2class("Vmstat::Cpu"),
+                  rb_intern("new"), 5, ULL2NUM(i),
+                                       ULL2NUM(cpuInfo[pos + CPU_STATE_USER]),
+                                       ULL2NUM(cpuInfo[pos + CPU_STATE_SYSTEM]),
+                                       ULL2NUM(cpuInfo[pos + CPU_STATE_NICE]),
+                                       ULL2NUM(cpuInfo[pos + CPU_STATE_IDLE]));
       rb_ary_push(cpus, cpu);
+    }
+
+    err = vm_deallocate(mach_task_self(), (vm_address_t)cpuInfo,
+                        (vm_size_t)sizeof(*cpuInfo) * numCpuInfo);
+    if (err != KERN_SUCCESS) {
+      rb_bug("vm_deallocate: %s\n", mach_error_string(err));
     }
   }
   
   return cpus;
 }
 
-VALUE method_memory(VALUE self) {
+VALUE vmstat_memory(VALUE self) {
   VALUE memory = Qnil;
   vm_size_t pagesize;
   uint host_count = HOST_VM_INFO_COUNT;
@@ -130,30 +104,53 @@ VALUE method_memory(VALUE self) {
     err = host_statistics(mach_host_self(), HOST_VM_INFO,
                           (host_info_t)&vm_stat, &host_count);
     if (err == KERN_SUCCESS) {
-      memory = rb_hash_new();
-      rb_hash_aset(memory, SYM_PAGESIZE, ULL2NUM(pagesize));
-      rb_hash_aset(memory, SYM_WIRED, ULL2NUM(vm_stat.active_count));
-      rb_hash_aset(memory, SYM_ACTIVE, ULL2NUM(vm_stat.inactive_count));
-      rb_hash_aset(memory, SYM_INACTIVE, ULL2NUM(vm_stat.wire_count));
-      rb_hash_aset(memory, SYM_FREE, ULL2NUM(vm_stat.free_count));
-      rb_hash_aset(memory, SYM_WIRED_BYTES, ULL2NUM(vm_stat.wire_count * pagesize));
-      rb_hash_aset(memory, SYM_ACTIVE_BYTES, ULL2NUM(vm_stat.active_count * pagesize));
-      rb_hash_aset(memory, SYM_INACTIVE_BYTES, ULL2NUM(vm_stat.inactive_count * pagesize));
-      rb_hash_aset(memory, SYM_FREE_BYTES, ULL2NUM(vm_stat.free_count * pagesize));
-      rb_hash_aset(memory, SYM_ZERO_FILLED, ULL2NUM(vm_stat.zero_fill_count));
-      rb_hash_aset(memory, SYM_REACTIVATED, ULL2NUM(vm_stat.reactivations));
-      rb_hash_aset(memory, SYM_PURGEABLE, ULL2NUM(vm_stat.purgeable_count));
-      rb_hash_aset(memory, SYM_PURGED, ULL2NUM(vm_stat.purges));
-      rb_hash_aset(memory, SYM_PAGEINS, ULL2NUM(vm_stat.pageins));
-      rb_hash_aset(memory, SYM_PAGEOUTS, ULL2NUM(vm_stat.pageouts));
-      rb_hash_aset(memory, SYM_FAULTS, ULL2NUM(vm_stat.faults));
-      rb_hash_aset(memory, SYM_COW_FAULTS, ULL2NUM(vm_stat.cow_faults));
-      rb_hash_aset(memory, SYM_LOOKUPS, ULL2NUM(vm_stat.lookups));
-      rb_hash_aset(memory, SYM_HITS, ULL2NUM(vm_stat.hits));
+      memory = rb_funcall(rb_path2class("Vmstat::Memory"),
+               rb_intern("new"), 15, ULL2NUM(pagesize),
+                                     ULL2NUM(vm_stat.active_count),
+                                     ULL2NUM(vm_stat.inactive_count),
+                                     ULL2NUM(vm_stat.wire_count),
+                                     ULL2NUM(vm_stat.free_count),
+                                     ULL2NUM(vm_stat.pageins),
+                                     ULL2NUM(vm_stat.pageouts),
+                                     ULL2NUM(vm_stat.zero_fill_count),
+                                     ULL2NUM(vm_stat.reactivations),
+                                     ULL2NUM(vm_stat.purgeable_count),
+                                     ULL2NUM(vm_stat.purges),
+                                     ULL2NUM(vm_stat.faults),
+                                     ULL2NUM(vm_stat.cow_faults),
+                                     ULL2NUM(vm_stat.lookups),
+                                     ULL2NUM(vm_stat.hits));
+    }
+
+    err = vm_deallocate(mach_task_self(), (vm_address_t)pagesize,
+                        (vm_size_t)host_count);
+    if (err != KERN_SUCCESS) {
+      rb_bug("vm_deallocate: %s\n", mach_error_string(err));
     }
   }
-  
+
   return memory;
+}
+
+VALUE vmstat_task(VALUE self) {
+  VALUE task = Qnil;
+  struct task_basic_info info;
+  kern_return_t err;
+  mach_msg_type_number_t size = sizeof(info);
+
+  err = task_info(mach_task_self(), TASK_BASIC_INFO, (task_info_t)&info, &size);
+  if (err == KERN_SUCCESS) {
+    task = rb_funcall(rb_path2class("Vmstat::Task"),
+           rb_intern("new"), 5, LONG2NUM(info.suspend_count),
+                                LONG2NUM(info.virtual_size),
+                                LONG2NUM(info.resident_size),
+                                LONG2NUM(info.user_time.seconds * 1000 + info.user_time.microseconds),
+                                LONG2NUM(info.system_time.seconds * 1000 + info.system_time.microseconds));
+  } else {
+    rb_bug("task_info: %s\n", mach_error_string(err));
+  }
+
+  return task;
 }
 #elif __linux
     // linux
@@ -166,98 +163,94 @@ typedef struct {
   long idle;
 } cpu_time_t;
 
-VALUE method_cpu(VALUE self) {
+VALUE vmstat_cpu(VALUE self) {
   VALUE cpus = rb_ary_new();
   int cpu_count = system_int("hw.ncpu");
   size_t len = sizeof(cpu_time_t) * cpu_count;
   cpu_time_t * cp_times = ALLOC_N(cpu_time_t, cpu_count);
+  cpu_time_t * cp_time;
   int i;
   
   if (sysctlbyname("kern.cp_times", cp_times, &len, NULL, 0) == 0) {
     for (i = 0; i < cpu_count; i++) {
-      VALUE cpu = rb_hash_new();
-      cpu_time_t cp_time = cp_times[i];
-      rb_hash_aset(cpu, SYM_USER, LONG2NUM(cp_time.user));
-      rb_hash_aset(cpu, SYM_SYSTEM, LONG2NUM(cp_time.system + cp_time.intr));
-      rb_hash_aset(cpu, SYM_NICE, LONG2NUM(cp_time.nice));
-      rb_hash_aset(cpu, SYM_IDLE, LONG2NUM(cp_time.idle));
+      cp_time = &cp_times[i];
+      VALUE cpu = rb_funcall(rb_path2class("Vmstat::Cpu"),
+                  rb_intern("new"), 5, ULL2NUM(i),
+                                       ULL2NUM(cp_time->user),
+                                       ULL2NUM(cp_time->system + cp_time->intr),
+                                       ULL2NUM(cp_time->nice),
+                                       ULL2NUM(cp_time->idle));
       rb_ary_push(cpus, cpu);
     }
   }
+
   free(cp_times);
   
   return cpus;
 }
 
-VALUE method_memory(VALUE self) {
-  VALUE memory = rb_hash_new();
-  unsigned long long pagesize = system_ull("vm.stats.vm.v_page_size");
-
-  rb_hash_aset(memory, SYM_PAGESIZE, ULL2NUM(pagesize));
-  rb_hash_aset(memory, SYM_WIRED, ULL2NUM(system_ull("vm.stats.vm.v_inactive_count")));
-  rb_hash_aset(memory, SYM_ACTIVE, ULL2NUM(system_ull("vm.stats.vm.v_active_count")));
-  rb_hash_aset(memory, SYM_INACTIVE, ULL2NUM(system_ull("vm.stats.vm.v_wire_count")));
-  rb_hash_aset(memory, SYM_FREE, ULL2NUM(system_ull("vm.stats.vm.v_free_count")));
-  rb_hash_aset(memory, SYM_WIRED_BYTES, ULL2NUM((system_ull("vm.stats.vm.v_cache_count") +
-                                                 system_ull("vm.stats.vm.v_wire_count")) * pagesize));
-  rb_hash_aset(memory, SYM_ACTIVE_BYTES, ULL2NUM(system_ull("vm.stats.vm.v_active_count") * pagesize));
-  rb_hash_aset(memory, SYM_INACTIVE_BYTES, ULL2NUM(system_ull("vm.stats.vm.v_inactive_count") * pagesize));
-  rb_hash_aset(memory, SYM_FREE_BYTES, ULL2NUM(system_ull("vm.stats.vm.v_free_count") * pagesize));
-  rb_hash_aset(memory, SYM_ZERO_FILLED, ULL2NUM(system_ull("vm.stats.misc.zero_page_count")));
-  rb_hash_aset(memory, SYM_REACTIVATED, ULL2NUM(system_ull("vm.stats.vm.v_reactivated")));
-  rb_hash_aset(memory, SYM_PURGEABLE, Qnil);
-  rb_hash_aset(memory, SYM_PURGED, Qnil);
-  rb_hash_aset(memory, SYM_PAGEINS, Qnil);
-  rb_hash_aset(memory, SYM_PAGEOUTS, Qnil);
-  rb_hash_aset(memory, SYM_FAULTS, ULL2NUM(system_ull("vm.stats.vm.v_vm_faults")));
-  rb_hash_aset(memory, SYM_COW_FAULTS, ULL2NUM(system_ull("vm.stats.vm.v_cow_faults")));
-  rb_hash_aset(memory, SYM_LOOKUPS, Qnil);
-  rb_hash_aset(memory, SYM_HITS, Qnil);
-  
+VALUE vmstat_memory(VALUE self) {
+  VALUE memory = rb_funcall(rb_path2class("Vmstat::Memory"),
+                 rb_intern("new"), 15, ULL2NUM(system_ull("vm.stats.vm.v_page_size")),
+                                       ULL2NUM(system_ull("vm.stats.vm.v_active_count")),
+                                       ULL2NUM(system_ull("vm.stats.vm.v_wire_count")),
+                                       ULL2NUM(system_ull("vm.stats.vm.v_inactive_count")),
+                                       ULL2NUM(system_ull("vm.stats.vm.v_free_count")),
+                                       ULL2NUM(Qnil),
+                                       ULL2NUM(Qnil),
+                                       ULL2NUM(system_ull("vm.stats.misc.zero_page_count")),
+                                       ULL2NUM(system_ull("vm.stats.vm.v_reactivated")),
+                                       ULL2NUM(Qnil),
+                                       ULL2NUM(Qnil),
+                                       ULL2NUM(system_ull("vm.stats.vm.v_vm_faults")),
+                                       ULL2NUM(system_ull("vm.stats.vm.v_cow_faults")),
+                                       ULL2NUM(Qnil),
+                                       ULL2NUM(Qnil));
   return memory;
 }
 #elif __posix
     // POSIX
 #endif
 
-VALUE method_disk(VALUE self, VALUE path) {
+VALUE vmstat_disk(VALUE self, VALUE path) {
   VALUE disk = Qnil;
   struct statfs stat;
 
   if (statfs(StringValueCStr(path), &stat) != -1) {
-    disk = rb_hash_new();
-    rb_hash_aset(disk, SYM_TYPE, ID2SYM(rb_intern(stat.f_fstypename)));
-    rb_hash_aset(disk, SYM_ORIGIN, rb_str_new(stat.f_mntfromname, strlen(stat.f_mntfromname)));
-    rb_hash_aset(disk, SYM_MOUNT, rb_str_new(stat.f_mntonname, strlen(stat.f_mntonname)));
-    rb_hash_aset(disk, SYM_FREE_BYTES, ULL2NUM(stat.f_bfree * stat.f_bsize));
-    rb_hash_aset(disk, SYM_AVAILABLE_BYTES, ULL2NUM(stat.f_bavail * stat.f_bsize));
-    rb_hash_aset(disk, SYM_USED_BYTES, ULL2NUM((stat.f_blocks - stat.f_bfree) * stat.f_bsize));
-    rb_hash_aset(disk, SYM_TOTAL_BYTES, ULL2NUM(stat.f_blocks * stat.f_bsize));
+    disk = rb_funcall(rb_path2class("Vmstat::Disk"),
+           rb_intern("new"), 7, ID2SYM(rb_intern(stat.f_fstypename)),
+                                rb_str_new(stat.f_mntfromname, strlen(stat.f_mntfromname)),
+                                rb_str_new(stat.f_mntonname, strlen(stat.f_mntonname)),
+                                ULL2NUM(stat.f_bsize),
+                                ULL2NUM(stat.f_bfree),
+                                ULL2NUM(stat.f_bavail),
+                                ULL2NUM(stat.f_blocks));
   }
 
   return disk;
 }
 
-#define AVGCOUNT 3
-VALUE method_load_avg(VALUE self) {
-  VALUE loads = rb_ary_new();
+VALUE vmstat_load_average(VALUE self) {
+  VALUE load = Qnil;
   double loadavg[AVGCOUNT];
-  int i;
 
   getloadavg(&loadavg[0], AVGCOUNT);
-  for(i = 0; i < AVGCOUNT; i++) {
-    rb_ary_push(loads, rb_float_new(loadavg[i]));
-  }
 
-  return loads;
+  load = rb_funcall(rb_path2class("Vmstat::LoadAverage"),
+         rb_intern("new"), 3, rb_float_new(loadavg[0]),
+                              rb_float_new(loadavg[1]),
+                              rb_float_new(loadavg[2]));
+
+  return load;
 }
 
-VALUE method_boot_time(VALUE self) {
+static int BOOT_TIME_MIB[] = { CTL_KERN, KERN_BOOTTIME };
+
+VALUE vmstat_boot_time(VALUE self) {
   struct timeval tv;
   size_t size = sizeof(tv);
-  static int which[] = { CTL_KERN, KERN_BOOTTIME };
 
-  if (sysctl(which, 2, &tv, &size, NULL, 0) == 0) {
+  if (sysctl(BOOT_TIME_MIB, 2, &tv, &size, NULL, 0) == 0) {
     return rb_time_new(tv.tv_sec, tv.tv_usec);
   } else {
     return Qnil;

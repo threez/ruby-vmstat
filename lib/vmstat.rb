@@ -1,50 +1,92 @@
 require "vmstat/version"
-require "vmstat/vmstat" # native lib
 
 module Vmstat
-  # The type of ethernet devices on freebsd/mac os x
-  ETHERNET_TYPE = 0x06
+  autoload :Cpu,              "vmstat/cpu"
+  autoload :NetworkInterface, "vmstat/network_interface"
+  autoload :Disk,             "vmstat/disk"
+  autoload :Memory,           "vmstat/memory"
+  autoload :Task,             "vmstat/task"
+  autoload :LoadAverage,      "vmstat/load_average"
+  autoload :Snapshot,         "vmstat/snapshot"
 
-  # The type of loopback devices on freebsd/mac os x
-  LOOPBACK_TYPE = 0x18
+  # Creates a full snapshot of the systems hardware statistics.
+  # @param [Array<String>] the paths to the disks to snapshot.
+  # @return [Vmstat::Snapshot] a snapshot of all statistics.
+  # @example
+  #   Vmstat.snapshot # => #<struct Vmstat::Snapshot ...>
+  def self.snapshot(paths = ["/"])
+    Snapshot.new(paths)
+  end
+
+  # Fetches the boot time of the system.
+  # @return [Time] the boot time as regular time object.
+  # @example
+  #   Vmstat.boot_time # => 2012-10-09 18:42:37 +0200
+  def self.boot_time
+    # implemented in native extension ...
+  end
+
+  # Fetches the cpu statistics (usage counter for user, nice, system and idle)
+  # @return [Array<Vmstat::Cpu>] the array of cpu counter
+  # @example
+  #   Vmstat.cpu # => [#<struct Vmstat::Cpu ...>, #<struct Vmstat::Cpu ...>]
+  def self.cpu
+    # implemented in native extension ...
+  end
+
+  # Fetches the usage data and other useful disk information for the given path.
+  # @param [String] path the path (mount point or device path) to the disk
+  # @return [Vmstat::Disk] the disk information
+  # @example
+  #   Vmstat.disk("/") # => #<struct Vmstat::Disk type=:hfs, ...>
+  def self.disk(path)
+    # implemented in native extension ...
+  end
+
+  # Fetches the load average for the current system.
+  # @return [Vmstat::LoadAverage] the load average data
+  # @example
+  #   Vmstat.load_average # => #<struct Vmstat::LoadAverage one_minute=...>
+  def self.load_average
+    # implemented in native extension ...
+  end
+
+  # Fetches the memory usage information.
+  # @return [Vmstat::Memory] the memory data like free, used und total.
+  # @example
+  #   Vmstat.memory # => #<struct Vmstat::Memory ...>
+  def self.memory
+    # implemented in native extension ...
+  end
+
+  # Fetches the information for all available network devices.
+  # @return [Array<Vmstat::NetworkInterface>] the network device information
+  # @example
+  #   Vmstat.network_interfaces # => [#<struct Vmstat::NetworkInterface ...>, ...]
+  def self.network_interfaces
+    # implemented in native extension ...
+  end
+
+  # Fetches time and memory usage for the current process.
+  # @note Currently only on Mac OS X
+  # @return [Array<Vmstat::Task>] the network device information
+  # @example
+  #   Vmstat.task # => #<struct Vmstat::Task ...>
+  def self.task
+    # implemented in native extension ...
+  end
 
   # Filters all available ethernet devices.
-  # @return [Hash<Symbol, Hash>] the ethernet device name and values
-  # @example
-  #   Vmstat.ethernet_devices # => { :en0 => {
-  #   #    :in_bytes=>7104874723,
-  #   #    :in_errors=>0,
-  #   #    :in_drops=>0,
-  #   #    :out_bytes=>478849502,
-  #   #    :out_errors=>0,
-  #   #    :type=>6},
-  #   #  :p2p0=> ...
+  # @return [Array<NetworkInterface>] the ethernet devices
   def self.ethernet_devices
-    filter_devices ETHERNET_TYPE
+    network_interfaces.select(&:ethernet?)
   end
 
   # Filters all available loopback devices.
-  # @return [Hash<Symbol, Hash>] the loopback device name and values
-  # @example
-  #   Vmstat.loopback_devices # => { :lo0 => { 
-  #   # :in_bytes=>6935997,
-  #   # :in_errors=>0,
-  #   # :in_drops=>0,
-  #   # :out_bytes=>6935997,
-  #   # :out_errors=>0,
-  #   # :type=>24
-  #   # }}
+  # @return [Array<NetworkInterface>] the loopback devices
   def self.loopback_devices
-    filter_devices LOOPBACK_TYPE
-  end
-
-  # A method to filter the devices.
-  # @param [Fixnum] type the type to filter for
-  # @return [Hash<Symbol, Hash>] the filtered device name and values
-  # @api private
-  def self.filter_devices(type)
-    network.select do |name, attrbutes|
-      attrbutes[:type] == type
-    end
+    network_interfaces.select(&:loopback?)
   end
 end
+
+require "vmstat/vmstat" # native lib
