@@ -11,7 +11,7 @@ module Vmstat
       @load_average = Vmstat.load_average
       @memory = Vmstat.memory
       @network_interfaces = Vmstat.network_interfaces
-      @task = Vmstat.task
+      @task = Vmstat.task if Vmstat.respond_to? :task
     end
   end
 end

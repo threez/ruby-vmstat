@@ -7,17 +7,20 @@ This is a focused and fast library to get system information like:
 * _CPU_ (user, system, nice, idle)
 * _Load_ Average
 * _Disk_ (type, disk path, free bytes, total bytes, ...)
+* _Boot time_
 * _Current Task_ (used bytes and usage time *MAC OS X ONLY*)
 
 *It currently supports:*
 
 * FreeBSD
 * MacOS X
+* Linux (>= 2.6)
 
 *It might support (but not tested):*
 
 * OpenBSD
 * NetBSD
+* Older versions of linux
 
 ## Installation
 
@@ -35,10 +38,10 @@ Or install it yourself as:
 
 ## Usage
 
-Just require the library and make a snapshot or use the distinct methods to just capture parts of the statistics.
+Just require the library and make a snapshot or use the distinct methods to just capture parts of the statistics. For further information have a look at the [rdoc](http://rdoc.info/gems/vmstat/frames).
 
 	require "vmstat"
-	require "pp"
+	
 	Vmstat.snapshot # => #<Vmstat::Snapshot:0x007fe5f22df660
 	#	 @at=2012-10-09 21:48:57 +0200,
 	#	 @boot_time=2012-10-09 18:42:37 +0200,
@@ -135,6 +138,13 @@ Just require the library and make a snapshot or use the distinct methods to just
 	#	   resident_size=19628032,
 	#	   user_time_ms=28,
 	#	   system_time_ms=83>>
+
+## Todo
+
+* Swap information
+* Reduce the number of memory information gatherd
+* Support more platforms (hp ux, aix, solaris, ...)
+* Server performance information (open file handles, cache sizes, ...)
 
 ## Contributing
 
