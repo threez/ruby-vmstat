@@ -46,6 +46,7 @@
 <em>Load</em> Average</li>
 <li>
 <em>Disk</em> (type, disk path, free bytes, total bytes, ...)</li>
+<li><em>Boot time</em></li>
 <li>
 <em>Current Task</em> (used bytes and usage time <em>MAC OS X ONLY</em>)</li>
 </ul><p><em>It currently supports:</em></p>
@@ -53,11 +54,13 @@
 <ul>
 <li>FreeBSD</li>
 <li>MacOS X</li>
+<li>Linux (&gt;= 2.6)</li>
 </ul><p><em>It might support (but not tested):</em></p>
 
 <ul>
 <li>OpenBSD</li>
 <li>NetBSD</li>
+<li>Older versions of linux</li>
 </ul><h2>Installation</h2>
 
 <p>Add this line to your application's Gemfile:</p>
@@ -77,10 +80,10 @@
 
 <h2>Usage</h2>
 
-<p>Just require the library and make a snapshot or use the distinct methods to just capture parts of the statistics.</p>
+<p>Just require the library and make a snapshot or use the distinct methods to just capture parts of the statistics. For further information have a look at the <a href="http://rdoc.info/gems/vmstat/frames">rdoc</a>.</p>
 
 <pre><code>require "vmstat"
-require "pp"
+
 Vmstat.snapshot # =&gt; #&lt;Vmstat::Snapshot:0x007fe5f22df660
 #    @at=2012-10-09 21:48:57 +0200,
 #    @boot_time=2012-10-09 18:42:37 +0200,
@@ -179,7 +182,14 @@ Vmstat.snapshot # =&gt; #&lt;Vmstat::Snapshot:0x007fe5f22df660
 #      system_time_ms=83&gt;&gt;
 </code></pre>
 
-<h2>Contributing</h2>
+<h2>Todo</h2>
+
+<ul>
+<li>Swap information</li>
+<li>Reduce the number of memory information gatherd</li>
+<li>Support more platforms (hp ux, aix, solaris, ...)</li>
+<li>Server performance information (open file handles, cache sizes, ...)</li>
+</ul><h2>Contributing</h2>
 
 <ol>
 <li>Fork it</li>
