@@ -3,6 +3,8 @@
 #include <mach/mach.h>
 #include <mach/mach_host.h>
 
+#ifndef VMSTAT_CPU
+#define VMSTAT_CPU
 VALUE vmstat_cpu(VALUE self) {
   VALUE cpus = rb_ary_new();
   processor_info_array_t cpuInfo;
@@ -34,7 +36,10 @@ VALUE vmstat_cpu(VALUE self) {
   
   return cpus;
 }
+#endif
 
+#ifndef VMSTAT_MEMORY
+#define VMSTAT_MEMORY
 VALUE vmstat_memory(VALUE self) {
   VALUE memory = Qnil;
   vm_size_t pagesize;
@@ -74,7 +79,10 @@ VALUE vmstat_memory(VALUE self) {
 
   return memory;
 }
+#endif
 
+#ifndef VMSTAT_TASK
+#define VMSTAT_TASK
 VALUE vmstat_task(VALUE self) {
   VALUE task = Qnil;
   struct task_basic_info info;
@@ -95,4 +103,5 @@ VALUE vmstat_task(VALUE self) {
 
   return task;
 }
+#endif
 #endif

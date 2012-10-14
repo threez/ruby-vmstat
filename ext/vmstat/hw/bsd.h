@@ -1,4 +1,5 @@
-#if defined(__unix)
+#if defined(HAVE_SYS_SYSCTL_H) && defined(HAVE_SYS_TYPES_H) && \
+    defined(HAVE_SYSCTLBYNAME)
 #include <vmstat.h>
 #include <sys/sysctl.h>
 #include <sys/types.h>
@@ -15,6 +16,8 @@ typedef struct {
   long idle;
 } cpu_time_t;
 
+#ifndef VMSTAT_CPU
+#define VMSTAT_CPU
 VALUE vmstat_cpu(VALUE self) {
   VALUE cpus = rb_ary_new();
   int cpu_count = system_int("hw.ncpu");
@@ -40,7 +43,10 @@ VALUE vmstat_cpu(VALUE self) {
   
   return cpus;
 }
+#endif
 
+#ifndef VMSTAT_MEMORY
+#define VMSTAT_MEMORY
 VALUE vmstat_memory(VALUE self) {
   VALUE memory = rb_funcall(rb_path2class("Vmstat::Memory"),
                  rb_intern("new"), 15, ULL2NUM(system_ull("vm.stats.vm.v_page_size")),
@@ -78,4 +84,5 @@ unsigned long long system_ull(const char * name) {
     return number;
   }
 }
+#endif
 #endif

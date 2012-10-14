@@ -11,9 +11,7 @@ VALUE vmstat_memory(VALUE self);
 VALUE vmstat_disk(VALUE self, VALUE path);
 VALUE vmstat_load_average(VALUE self);
 VALUE vmstat_boot_time(VALUE self);
-
-#if defined(__APPLE__)
 VALUE vmstat_task(VALUE self);
-#endif
+VALUE vmstat_pagesize(VALUE self);
 
 #endif /* _VMSTAT_H_ */

@@ -22,6 +22,8 @@
 #include <net/if_mib.h>
 #include <net/if_types.h>
 
+#ifndef VMSTAT_NETWORK_INTERFACES
+#define VMSTAT_NETWORK_INTERFACES
 VALUE vmstat_network_interfaces(VALUE self) {
   VALUE devices = rb_ary_new();
   int i, err;
@@ -50,21 +52,10 @@ VALUE vmstat_network_interfaces(VALUE self) {
 
   return devices;
 }
+#endif
 
-VALUE vmstat_load_average(VALUE self) {
-  VALUE load = Qnil;
-  double loadavg[AVGCOUNT];
-
-  getloadavg(&loadavg[0], AVGCOUNT);
-
-  load = rb_funcall(rb_path2class("Vmstat::LoadAverage"),
-         rb_intern("new"), 3, rb_float_new(loadavg[0]),
-                              rb_float_new(loadavg[1]),
-                              rb_float_new(loadavg[2]));
-
-  return load;
-}
-
+#ifndef VMSTAT_BOOT_TIME
+#define VMSTAT_BOOT_TIME
 static int BOOT_TIME_MIB[] = { CTL_KERN, KERN_BOOTTIME };
 
 VALUE vmstat_boot_time(VALUE self) {
@@ -77,4 +68,5 @@ VALUE vmstat_boot_time(VALUE self) {
     return Qnil;
   }
 }
+#endif
 #endif
