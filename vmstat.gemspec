@@ -23,4 +23,6 @@ Gem::Specification.new do |gem|
 
   gem.add_development_dependency('rspec')
   gem.add_development_dependency('rake-compiler')
+  gem.add_development_dependency('guard-rspec')
+  gem.add_development_dependency('timecop')
 end

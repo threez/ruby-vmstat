@@ -7,6 +7,7 @@
 $:.unshift(File.expand_path("../lib", __FILE__))
 require 'vmstat'
 require 'ostruct'
+require 'timecop'
 
 RSpec.configure do |config|
   config.treat_symbols_as_metadata_keys_with_true_values = true
