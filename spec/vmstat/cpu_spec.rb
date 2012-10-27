@@ -13,7 +13,7 @@ describe Vmstat::Cpu do
       subject { first_cpu }
 
       it "should return a vmstat cpu object" do
-        should be_a(Vmstat::Cpu)
+        should be_a(described_class)
       end
 
       context "methods" do

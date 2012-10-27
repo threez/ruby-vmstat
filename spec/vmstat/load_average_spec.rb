@@ -5,7 +5,7 @@ describe Vmstat::LoadAverage do
     subject { Vmstat.load_average }
 
     it "should be an vmstat load average object" do
-      should be_a(Vmstat::LoadAverage)
+      should be_a(described_class)
     end
 
     context "methods" do

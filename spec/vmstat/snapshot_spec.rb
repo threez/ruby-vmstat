@@ -6,7 +6,7 @@ describe Vmstat::Snapshot do
     subject { snapshot }
 
     it "should be an vmstat load snapshot object" do
-      should be_a(Vmstat::Snapshot)
+      should be_a(described_class)
     end
 
     context "methods" do

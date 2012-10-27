@@ -6,7 +6,7 @@ describe Vmstat::Task do
     subject { task }
 
     it "should be a vmstat task object" do
-      should be_a(Vmstat::Task)
+      should be_a(described_class)
     end
 
     context "methods" do

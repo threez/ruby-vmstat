@@ -13,7 +13,7 @@ describe Vmstat::NetworkInterface do
       subject { loopback }
 
       it "should be a vmstat network interface object" do
-        should be_a(Vmstat::NetworkInterface)
+        should be_a(described_class)
       end
 
       context "methods" do
