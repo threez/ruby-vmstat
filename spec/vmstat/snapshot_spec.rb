@@ -12,7 +12,7 @@ describe Vmstat::Snapshot do
     context "methods" do
       it { should respond_to(:at) }
       it { should respond_to(:boot_time) }
-      it { should respond_to(:cpu) }
+      it { should respond_to(:cpus) }
       it { should respond_to(:disks) }
       it { should respond_to(:load_average) }
       it { should respond_to(:memory) }
@@ -23,7 +23,7 @@ describe Vmstat::Snapshot do
     context "content" do
       its(:at) { should be_a(Time) }
       its(:boot_time) { should be_a(Time) }
-      its(:cpu) { should be_a(Array) }
+      its(:cpus) { should be_a(Array) }
       its(:disks) { should be_a(Array) }
       its(:load_average) { should be_a(Vmstat::LoadAverage) }
       its(:memory) { should be_a(Vmstat::Memory) }
@@ -31,7 +31,7 @@ describe Vmstat::Snapshot do
       its(:task) { should be_a(Vmstat::Task) }
 
       context "first of cpu" do
-        subject { snapshot.cpu.first }
+        subject { snapshot.cpus.first }
         it { should be_a(Vmstat::Cpu) }
       end
       
