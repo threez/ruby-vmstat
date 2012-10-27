@@ -8,7 +8,7 @@ Rake::ExtensionTask.new(:vmstat) do |ext|
 end
 
 desc "Run specs"
-RSpec::Core::RakeTask.new(:spec)
+RSpec::Core::RakeTask.new(:spec => :compile)
 
 desc "Open an irb session preloaded with smartstat"
 task :console do
