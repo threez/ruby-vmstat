@@ -53,9 +53,12 @@ describe Vmstat::ProcFS do
     it { should be_a(Array) }
     it do
       should == [
-        Vmstat::NetworkInterface.new(:lo, 3224, 0, 0, 3224, 0),
-        Vmstat::NetworkInterface.new(:eth1, 0, 1, 2, 0, 3),
-        Vmstat::NetworkInterface.new(:eth0, 33660, 0, 0, 36584, 0)
+        Vmstat::NetworkInterface.new(:lo, 3224, 0, 0, 3224, 0,
+                                     Vmstat::NetworkInterface::LOOPBACK_TYPE),
+        Vmstat::NetworkInterface.new(:eth1, 0, 1, 2, 0, 3,
+                                     Vmstat::NetworkInterface::ETHERNET_TYPE),
+        Vmstat::NetworkInterface.new(:eth0, 33660, 0, 0, 36584, 0,
+                                     Vmstat::NetworkInterface::ETHERNET_TYPE)
       ]
     end
   end

@@ -86,9 +86,15 @@ module Vmstat
       netifcs = []
       procfs_file("net", "dev") do |file|
         file.read.scan(NET_DATA) do |columns|
+          type = case columns[0]
+            when /^eth/ then NetworkInterface::ETHERNET_TYPE
+            when /^lo/  then NetworkInterface::LOOPBACK_TYPE
+          end
+
           netifcs << NetworkInterface.new(columns[0].to_sym, columns[1].to_i, 
                                           columns[3].to_i,   columns[4].to_i, 
-                                          columns[9].to_i,   columns[11].to_i)
+                                          columns[9].to_i,   columns[11].to_i,
+                                          type)
         end
       end
       netifcs
