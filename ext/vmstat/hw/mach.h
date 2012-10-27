@@ -53,21 +53,13 @@ VALUE vmstat_memory(VALUE self) {
                           (host_info_t)&vm_stat, &host_count);
     if (err == KERN_SUCCESS) {
       memory = rb_funcall(rb_path2class("Vmstat::Memory"),
-               rb_intern("new"), 15, ULL2NUM(pagesize),
-                                     ULL2NUM(vm_stat.active_count),
-                                     ULL2NUM(vm_stat.inactive_count),
-                                     ULL2NUM(vm_stat.wire_count),
-                                     ULL2NUM(vm_stat.free_count),
-                                     ULL2NUM(vm_stat.pageins),
-                                     ULL2NUM(vm_stat.pageouts),
-                                     ULL2NUM(vm_stat.zero_fill_count),
-                                     ULL2NUM(vm_stat.reactivations),
-                                     ULL2NUM(vm_stat.purgeable_count),
-                                     ULL2NUM(vm_stat.purges),
-                                     ULL2NUM(vm_stat.faults),
-                                     ULL2NUM(vm_stat.cow_faults),
-                                     ULL2NUM(vm_stat.lookups),
-                                     ULL2NUM(vm_stat.hits));
+               rb_intern("new"), 7, ULL2NUM(pagesize),
+                                    ULL2NUM(vm_stat.active_count),
+                                    ULL2NUM(vm_stat.inactive_count),
+                                    ULL2NUM(vm_stat.wire_count),
+                                    ULL2NUM(vm_stat.free_count),
+                                    ULL2NUM(vm_stat.pageins),
+                                    ULL2NUM(vm_stat.pageouts));
     }
 
     err = vm_deallocate(mach_task_self(), (vm_address_t)pagesize,

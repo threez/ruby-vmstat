@@ -7,7 +7,7 @@ This is a focused and fast library to get system information like:
 * _CPU_ (user, system, nice, idle)
 * _Load_ Average
 * _Disk_ (type, disk path, free bytes, total bytes, ...)
-* _Boot time_
+* _Boot Time_
 * _Current Task_ (used bytes and usage time *MAC OS X ONLY*)
 
 *It currently supports:*
@@ -45,7 +45,7 @@ Just require the library and make a snapshot or use the distinct methods to just
 	Vmstat.snapshot # => #<Vmstat::Snapshot:0x007fe5f22df660
 	#	 @at=2012-10-09 21:48:57 +0200,
 	#	 @boot_time=2012-10-09 18:42:37 +0200,
-	#	 @cpu=
+	#	 @cpus=
 	#	  [#<struct Vmstat::Cpu
 	#	    num=0,
 	#	    user=187167,
@@ -81,15 +81,7 @@ Just require the library and make a snapshot or use the distinct methods to just
 	#	   inactive=484694,
 	#	   free=470582,
 	#	   pageins=102438,
-	#	   pageouts=0,
-	#	   zero_filled=930821373,
-	#	   reactivated=33,
-	#	   purgeable=88184,
-	#	   purged=0,
-	#	   faults=90277275,
-	#	   copy_on_write_faults=668693,
-	#	   lookups=516021,
-	#	   hits=17>,
+	#	   pageouts=0>,
 	#	 @network_interfaces=
 	#	  [#<struct Vmstat::NetworkInterface
 	#	    name=:lo0,
@@ -142,9 +134,8 @@ Just require the library and make a snapshot or use the distinct methods to just
 ## Todo
 
 * Swap information
-* Reduce the number of memory information gatherd
 * Support more platforms (hp ux, aix, solaris, ...)
-* Server performance information (open file handles, cache sizes, ...)
+* Server performance/system information (open file handles, cache sizes, number of inodes ...)
 
 ## Contributing
 

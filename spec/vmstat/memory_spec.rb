@@ -15,14 +15,13 @@ describe Vmstat::Memory do
       it { should respond_to(:active) }
       it { should respond_to(:inactive) }
       it { should respond_to(:free) }
+      it { should respond_to(:pageins) }
+      it { should respond_to(:pageouts) }
+
       it { should respond_to(:wired_bytes) }
       it { should respond_to(:active_bytes) }
       it { should respond_to(:inactive_bytes) }
       it { should respond_to(:free_bytes) }
-      it { should respond_to(:zero_filled) }
-      it { should respond_to(:reactivated) }
-      it { should respond_to(:faults) }
-      it { should respond_to(:copy_on_write_faults) }
     end
 
     context "content" do
@@ -31,14 +30,13 @@ describe Vmstat::Memory do
       its(:active) { should be_a_kind_of(Numeric) }
       its(:inactive) { should be_a_kind_of(Numeric) }
       its(:free) { should be_a_kind_of(Numeric) }
+      its(:pageins) { should be_a_kind_of(Numeric) }
+      its(:pageouts) { should be_a_kind_of(Numeric) }
+
       its(:wired_bytes) { should be_a_kind_of(Numeric) }
       its(:active_bytes) { should be_a_kind_of(Numeric) }
       its(:inactive_bytes) { should be_a_kind_of(Numeric) }
       its(:free_bytes) { should be_a_kind_of(Numeric) }
-      its(:zero_filled) { should be_a_kind_of(Numeric) }
-      its(:reactivated) { should be_a_kind_of(Numeric) }
-      its(:faults) { should be_a_kind_of(Numeric) }
-      its(:copy_on_write_faults) { should be_a_kind_of(Numeric) }
     end
   end
 end
