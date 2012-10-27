@@ -31,7 +31,8 @@
         <hr>
 
         <section id="main_content">
-          <h1>Vmstat</h1>
+          <h1>Vmstat <a href="http://travis-ci.org/threez/ruby-vmstat"><img src="https://secure.travis-ci.org/threez/ruby-vmstat.png" alt="Build Status"></a> <a href="https://codeclimate.com/github/threez/ruby-vmstat"><img src="https://codeclimate.com/badge.png" alt="Code Climate"></a>
+</h1>
 
 <p>This is a focused and fast library to get system information like:</p>
 
@@ -46,9 +47,9 @@
 <em>Load</em> Average</li>
 <li>
 <em>Disk</em> (type, disk path, free bytes, total bytes, ...)</li>
-<li><em>Boot time</em></li>
+<li><em>Boot Time</em></li>
 <li>
-<em>Current Task</em> (used bytes and usage time <em>MAC OS X ONLY</em>)</li>
+<em>Current Task</em> (used bytes and usage time <em>MAC OS X / Linux ONLY</em>)</li>
 </ul><p><em>It currently supports:</em></p>
 
 <ul>
@@ -87,7 +88,7 @@
 Vmstat.snapshot # =&gt; #&lt;Vmstat::Snapshot:0x007fe5f22df660
 #    @at=2012-10-09 21:48:57 +0200,
 #    @boot_time=2012-10-09 18:42:37 +0200,
-#    @cpu=
+#    @cpus=
 #     [#&lt;struct Vmstat::Cpu
 #       num=0,
 #       user=187167,
@@ -123,15 +124,7 @@ Vmstat.snapshot # =&gt; #&lt;Vmstat::Snapshot:0x007fe5f22df660
 #      inactive=484694,
 #      free=470582,
 #      pageins=102438,
-#      pageouts=0,
-#      zero_filled=930821373,
-#      reactivated=33,
-#      purgeable=88184,
-#      purged=0,
-#      faults=90277275,
-#      copy_on_write_faults=668693,
-#      lookups=516021,
-#      hits=17&gt;,
+#      pageouts=0&gt;,
 #    @network_interfaces=
 #     [#&lt;struct Vmstat::NetworkInterface
 #       name=:lo0,
@@ -186,9 +179,8 @@ Vmstat.snapshot # =&gt; #&lt;Vmstat::Snapshot:0x007fe5f22df660
 
 <ul>
 <li>Swap information</li>
-<li>Reduce the number of memory information gatherd</li>
 <li>Support more platforms (hp ux, aix, solaris, ...)</li>
-<li>Server performance information (open file handles, cache sizes, ...)</li>
+<li>Server performance/system information (open file handles, cache sizes, number of inodes ...)</li>
 </ul><h2>Contributing</h2>
 
 <ol>
