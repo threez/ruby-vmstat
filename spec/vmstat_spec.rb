@@ -15,7 +15,7 @@ describe Vmstat do
   
   context "Vmstat#filter_devices" do
     it "should filter ethernet devices" do
-      Vmstat.ethernet_devices.size.should >= 2
+      Vmstat.ethernet_devices.size.should >= 1
     end
 
     it "should filter loopback devices" do
