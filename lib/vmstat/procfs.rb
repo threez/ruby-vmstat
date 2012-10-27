@@ -1,4 +1,6 @@
 module Vmstat
+  # Implementation of performance metrics gathering for linux and other os with
+  # the proc file system.
   module ProcFS
     # Grep from the man procfs about cpu data in stat file:
     # @example Format

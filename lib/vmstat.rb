@@ -1,5 +1,14 @@
 require "vmstat/version"
 
+# This is a focused and fast library to get system information like:
+# 
+# * _Memory_ (free, active, ...)
+# * _Network_ _Interfaces_ (name, in bytes, out bytes, ...)
+# * _CPU_ (user, system, nice, idle)
+# * _Load_ Average
+# * _Disk_ (type, disk path, free bytes, total bytes, ...)
+# * _Boot_ _Time_
+# * _Current_ _Task_ (used bytes and usage time *MACOSX* *ONLY*)
 module Vmstat
   autoload :Cpu,              "vmstat/cpu"
   autoload :NetworkInterface, "vmstat/network_interface"
@@ -11,7 +20,7 @@ module Vmstat
   autoload :ProcFS,           "vmstat/procfs"
   autoload :Stub,             "vmstat/stub"
   autoload :Snapshot,         "vmstat/snapshot"
-  extend Stub # the default null implementation
+  extend Stub # the default empty implementation
 
   # @!method self.boot_time
   # Fetches the boot time of the system.
@@ -64,7 +73,7 @@ module Vmstat
   #   Vmstat.task # => #<struct Vmstat::Task ...>
 
   # Creates a full snapshot of the systems hardware statistics.
-  # @param [Array<String>] the paths to the disks to snapshot.
+  # @param [Array<String>] paths the paths to the disks to snapshot.
   # @return [Vmstat::Snapshot] a snapshot of all statistics.
   # @example
   #   Vmstat.snapshot # => #<struct Vmstat::Snapshot ...>

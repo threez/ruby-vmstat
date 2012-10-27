@@ -1,4 +1,7 @@
 module Vmstat
+  # This is a stub module that should be replaced by system specific
+  # implementations of the different functions. This can either be native or
+  # with other modules like {ProcFS}.
   module Stub
     # Fetches the boot time of the system.
     # @return [Time] the boot time as regular time object.
