@@ -9,10 +9,10 @@ Gem::Specification.new do |gem|
   gem.authors       = ["Vincent Landgraf"]
   gem.email         = ["vilandgr@googlemail.com"]
   gem.description   = %q{
-    A focused and fast library t gather memory, 
+    A focused and fast library to gather memory, 
     cpu, network, load avg and disk information
   }
-  gem.summary       = %q{A focused and fast library t gather system information}
+  gem.summary       = %q{A focused and fast library to gather system information}
   gem.homepage      = "http://threez.github.com/ruby-vmstat/"
 
   gem.files         = `git ls-files`.split($/)
