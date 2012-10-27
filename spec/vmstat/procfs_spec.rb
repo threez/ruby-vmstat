@@ -62,4 +62,11 @@ describe Vmstat::ProcFS do
       ]
     end
   end
+
+  context "#task" do
+    subject { procfs.task }
+
+    it { should be_a(Vmstat::Task) }
+    it { should == Vmstat::Task.new(4807, 515, 2000, 0) }
+  end
 end

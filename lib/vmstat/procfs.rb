@@ -100,6 +100,18 @@ module Vmstat
       netifcs
     end
 
+    # Fetches the current process cpu and memory data.
+    # @return [Vmstat::Task] the task data for the current process
+    def task
+      @pagesize ||= Vmstat.pagesize
+
+      procfs_file("self", "stat") do |file|
+        data = file.read.split(/ /)
+        Task.new(data[22].to_i / @pagesize, data[23].to_i, 
+                 data[13].to_i * 1000, data[14].to_i * 1000)
+      end
+    end
+
     # Fetches the boot time of the system.
     # @return [Time] the boot time as regular time object.
     # @example

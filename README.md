@@ -8,7 +8,7 @@ This is a focused and fast library to get system information like:
 * _Load_ Average
 * _Disk_ (type, disk path, free bytes, total bytes, ...)
 * _Boot Time_
-* _Current Task_ (used bytes and usage time *MAC OS X ONLY*)
+* _Current Task_ (used bytes and usage time *MAC OS X / Linux ONLY*)
 
 *It currently supports:*
 

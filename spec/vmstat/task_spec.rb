@@ -10,7 +10,6 @@ describe Vmstat::Task do
     end
 
     context "methods" do
-      it { should respond_to(:suspend_count) }
       it { should respond_to(:virtual_size) }
       it { should respond_to(:resident_size) }
       it { should respond_to(:user_time_ms) }
@@ -18,7 +17,6 @@ describe Vmstat::Task do
     end
     
     context "content" do
-      its(:suspend_count) { should be_a_kind_of(Numeric) }
       its(:virtual_size) { should be_a_kind_of(Numeric) }
       its(:resident_size) { should be_a_kind_of(Numeric) }
       its(:user_time_ms) { should be_a_kind_of(Numeric) }

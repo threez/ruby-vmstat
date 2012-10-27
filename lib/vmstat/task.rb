@@ -1,7 +1,5 @@
 module Vmstat
   # Per task performance metrics snapshot.
-  # @attr [Fixnum] suspend_count
-  #   The current suspend count for the task.
   # @attr [Fixnum] virtual_size
   #   The number of virtual pages for the task.
   # @attr [Fixnum] resident_size
@@ -10,7 +8,7 @@ module Vmstat
   #   The total user run time for terminated threads within the task.
   # @attr [Fixnum] system_time_ms
   #   The total system run time for terminated threads within the task.
-  class Task < Struct.new(:suspend_count, :virtual_size, :resident_size,
+  class Task < Struct.new(:virtual_size, :resident_size,
                           :user_time_ms, :system_time_ms)
   end
 end

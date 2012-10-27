@@ -8,7 +8,7 @@ require "vmstat/version"
 # * _Load_ Average
 # * _Disk_ (type, disk path, free bytes, total bytes, ...)
 # * _Boot_ _Time_
-# * _Current_ _Task_ (used bytes and usage time *MACOSX* *ONLY*)
+# * _Current_ _Task_ (used bytes and usage time *MACOSX* or *LINUX* *ONLY*)
 module Vmstat
   autoload :Cpu,              "vmstat/cpu"
   autoload :NetworkInterface, "vmstat/network_interface"

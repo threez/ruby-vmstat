@@ -84,8 +84,7 @@ VALUE vmstat_task(VALUE self) {
   err = task_info(mach_task_self(), TASK_BASIC_INFO, (task_info_t)&info, &size);
   if (err == KERN_SUCCESS) {
     task = rb_funcall(rb_path2class("Vmstat::Task"),
-           rb_intern("new"), 5, LONG2NUM(info.suspend_count),
-                                LONG2NUM(info.virtual_size),
+           rb_intern("new"), 4, LONG2NUM(info.virtual_size),
                                 LONG2NUM(info.resident_size),
                                 LONG2NUM(info.user_time.seconds * 1000 + info.user_time.microseconds),
                                 LONG2NUM(info.system_time.seconds * 1000 + info.system_time.microseconds));
