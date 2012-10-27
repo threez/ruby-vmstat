@@ -1,4 +1,4 @@
-# Vmstat
+# Vmstat [![Build Status](https://secure.travis-ci.org/threez/ruby-vmstat.png)](http://travis-ci.org/threez/ruby-vmstat) [![Code Climate](https://codeclimate.com/badge.png)](https://codeclimate.com/github/threez/ruby-vmstat)
 
 This is a focused and fast library to get system information like:
 
