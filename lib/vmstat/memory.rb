@@ -41,7 +41,7 @@ module Vmstat
     end
 
     # Calculate the total bytes based of all pages
-    # @retrun [Fixnum] total bytes
+    # @return [Fixnum] total bytes
     def total_bytes
       (wired + active + inactive + free) * pagesize  
     end
