@@ -24,12 +24,15 @@ describe Vmstat do
   end
   
   context "performance" do
+    percent = RUBY_VERSION.to_i == 2 ? 26 : 10
+    
     shared_examples "a not memory leaking method" do |method_name, *args|
-      it "should not grow the memory in method #{method_name} more than 10% " do
+      it "should not grow the memory in method #{method_name} " +
+         "more than #{percent}% " do
         mem_before = Vmstat.task.resident_size
         10000.times { Vmstat.send(method_name, *args) }
         mem_after = Vmstat.task.resident_size
-        mem_after.should < (mem_before * 1.10)
+        mem_after.should < (mem_before * (1 + percent / 100.0))
       end
     end
 
