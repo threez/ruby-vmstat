@@ -17,6 +17,7 @@ describe Vmstat::Memory do
     its(:active_bytes) { should == 803414016 }
     its(:inactive_bytes) { should == 1791979520 }
     its(:free_bytes) { should == 2808213504 }
+    its(:total_bytes) { should == 8580386816 }
 
     its(:pageins) { should == 1560532 }
     its(:pageouts) { should == 0 }
@@ -43,6 +44,7 @@ describe Vmstat::Memory do
       it { should respond_to(:active_bytes) }
       it { should respond_to(:inactive_bytes) }
       it { should respond_to(:free_bytes) }
+      it { should respond_to(:total_bytes)}
     end
 
     context "content" do
@@ -58,6 +60,7 @@ describe Vmstat::Memory do
       its(:active_bytes) { should be_a_kind_of(Numeric) }
       its(:inactive_bytes) { should be_a_kind_of(Numeric) }
       its(:free_bytes) { should be_a_kind_of(Numeric) }
+      its(:total_bytes) { should be_a_kind_of(Numeric) }
     end
   end
 end
