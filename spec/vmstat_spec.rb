@@ -14,8 +14,10 @@ describe Vmstat do
   end
   
   context "Vmstat#filter_devices" do
-    it "should filter ethernet devices" do
-      Vmstat.ethernet_devices.size.should >= 1
+    unless travis? # no external ethernet devices on travis ci
+      it "should filter ethernet devices" do
+        Vmstat.ethernet_devices.size.should >= 1
+      end
     end
 
     it "should filter loopback devices" do
