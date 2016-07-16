@@ -18,9 +18,12 @@ This is a focused and fast library to get system information like:
 
 *It might support (but not tested):*
 
+* Older versions of linux
+
+*It doesn't support:*
+
 * OpenBSD
 * NetBSD
-* Older versions of linux
 
 ## Installation
 
@@ -136,6 +139,7 @@ Just require the library and make a snapshot or use the distinct methods to just
 * Swap information
 * Support more platforms (hp ux, aix, solaris, ...)
 * Server performance/system information (open file handles, cache sizes, number of inodes ...)
+* Add support for (Open|Net)BSD using UVM (http://cvsweb.netbsd.org/bsdweb.cgi/src/external/bsd/top/dist/machine/) and remove sysctlbyname references where possible to make it compatible
 
 ## Contributing
 
