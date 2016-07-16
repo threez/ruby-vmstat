@@ -6,7 +6,7 @@
 
 // helper methods
 int system_int(const char *);
-unsigned long long system_ull(const char *);
+unsigned int system_uint(const char *);
 
 typedef struct {
   long user;
@@ -56,18 +56,18 @@ int system_int(const char * name) {
 #define VMSTAT_MEMORY
 VALUE vmstat_memory(VALUE self) {
   VALUE memory = rb_funcall(rb_path2class("Vmstat::Memory"),
-                 rb_intern("new"), 7, ULL2NUM(system_ull("vm.stats.vm.v_page_size")),
-                                      ULL2NUM(system_ull("vm.stats.vm.v_active_count")),
-                                      ULL2NUM(system_ull("vm.stats.vm.v_wire_count")),
-                                      ULL2NUM(system_ull("vm.stats.vm.v_inactive_count")),
-                                      ULL2NUM(system_ull("vm.stats.vm.v_free_count")),
-                                      ULL2NUM(system_ull("vm.stats.vm.v_vnodepgsin")),
-                                      ULL2NUM(system_ull("vm.stats.vm.v_vnodepgsout")));
+                 rb_intern("new"), 7, ULL2NUM(system_uint("vm.stats.vm.v_page_size")),
+                                      ULL2NUM(system_uint("vm.stats.vm.v_active_count")),
+                                      ULL2NUM(system_uint("vm.stats.vm.v_wire_count")),
+                                      ULL2NUM(system_uint("vm.stats.vm.v_inactive_count")),
+                                      ULL2NUM(system_uint("vm.stats.vm.v_free_count")),
+                                      ULL2NUM(system_uint("vm.stats.vm.v_vnodepgsin")),
+                                      ULL2NUM(system_uint("vm.stats.vm.v_vnodepgsout")));
   return memory;
 }
 
-unsigned long long system_ull(const char * name) {
-  long number;
+unsigned int system_uint(const char * name) {
+  unsigned int number;
   size_t number_size = sizeof(number);
   if (sysctlbyname(name, &number, &number_size, NULL, 0) == -1) {
     perror("sysctlbyname");
