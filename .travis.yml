@@ -3,10 +3,11 @@ os:
   - linux
   - osx
 rvm:
-  - 2.2.4
+  - 2.2.5
   - 2.3.1
 env:
   - TRAVIS=true
 matrix:
   allow_failures:
   - rvm: 2.3.1
+
