@@ -1,4 +1,4 @@
-#if defined(HAVE_SYS_PARAM_H) && defined(HAVE_SYS_MOUNT_H) && defined(HAVE_STATFS)
+#if defined(HAVE_STATFS) && (defined(HAVE_STRUCT_STATFS_F_TYPE) || defined(HAVE_STRUCT_STATFS_F_FSTYPENAME))
 #include <vmstat.h>
 #include <sys/param.h>
 #include <sys/mount.h>
