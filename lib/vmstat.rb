@@ -101,4 +101,7 @@ if RUBY_PLATFORM =~ /linux/
 elsif RUBY_PLATFORM =~ /(net|open)bsd/
   # command based implementation of mem, net, cpu
   require "vmstat/netopenbsd"
+elsif RUBY_PLATFORM =~ /solaris|smartos/
+  # command based implementation of mem, net, cpu
+  require "vmstat/solaris"
 end
