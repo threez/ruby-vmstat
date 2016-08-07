@@ -98,4 +98,7 @@ require "vmstat/vmstat" # native lib
 
 if RUBY_PLATFORM =~ /linux/
   Vmstat.send(:extend, Vmstat::ProcFS)
+elsif RUBY_PLATFORM =~ /(net|open)bsd/
+  # command based implementation of mem, net, cpu
+  require "vmstat/netopenbsd"
 end
