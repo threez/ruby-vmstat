@@ -3,11 +3,11 @@ os:
   - linux
   - osx
 rvm:
-  - 2.2.5
-  - head
+  - ruby-2.2.5
+  - ruby-head
 env:
   - TRAVIS=true
 matrix:
   allow_failures:
-  - rvm: head
+  - rvm: ruby-head
 
