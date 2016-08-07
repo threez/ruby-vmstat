@@ -24,7 +24,7 @@ describe Vmstat do
       Vmstat.loopback_devices.size.should == 1
     end
   end
-  
+
   context "performance" do
     percent = RUBY_VERSION.to_i == 2 ? 26 : 10
     
@@ -44,5 +44,5 @@ describe Vmstat do
     it_should_behave_like "a not memory leaking method", :disk, "/"
     it_should_behave_like "a not memory leaking method", :boot_time
     it_should_behave_like "a not memory leaking method", :load_average
-  end
+  end if ENV['PERF'] == "1"
 end
