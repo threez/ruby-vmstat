@@ -15,15 +15,13 @@ This is a focused and fast library to get system information like:
 * FreeBSD
 * MacOS X
 * Linux (>= 2.6)
+* OpenBSD
+* NetBSD
+* Solaris/SmartOS (partially)
 
 *It might support (but not tested):*
 
 * Older versions of linux
-
-*It doesn't support:*
-
-* OpenBSD
-* NetBSD
 
 ## Installation
 
@@ -137,9 +135,10 @@ Just require the library and make a snapshot or use the distinct methods to just
 ## Todo
 
 * Swap information
-* Support more platforms (hp ux, aix, solaris, ...)
+* Support more platforms (hp ux, aix, ...)
+* Optimize performance for OpenBSD, NetBSD using `uvmexp` etc. directly
+* Optimize performance for solaris, smartos using `kstat` etc. directly
 * Server performance/system information (open file handles, cache sizes, number of inodes ...)
-* Add support for (Open|Net)BSD using UVM (http://cvsweb.netbsd.org/bsdweb.cgi/src/external/bsd/top/dist/machine/) and remove sysctlbyname references where possible to make it compatible
 
 ## Contributing
 
