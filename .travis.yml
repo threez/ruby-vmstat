@@ -4,10 +4,10 @@ os:
   - osx
 rvm:
   - 2.2.5
-  - 2.3.1
+  - head
 env:
   - TRAVIS=true
 matrix:
   allow_failures:
-  - rvm: 2.3.1
+  - rvm: head
 
