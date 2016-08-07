@@ -46,8 +46,9 @@ have_const 'PF_LINK', sys_headers
 have_const 'NETLINK_GENERIC', sys_headers
 have_const 'IFMIB_IFDATA', sys_headers
 have_const 'IFDATA_GENERAL', sys_headers
-have_const 'CTL_KERN', sys_headers
-have_const 'KERN_BOOTTIME', sys_headers
+
+have_const 'CTL_KERN', ['sys/sysctl.h', 'sys/types.h']
+have_const 'KERN_BOOTTIME', ['sys/sysctl.h', 'sys/types.h']
 
 # bsd.h
 # only if we have *bsd like stats check for sysctlbyname
