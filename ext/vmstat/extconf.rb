@@ -30,9 +30,12 @@ have_const 'CPU_STATE_IDLE', mach_headers
 have_header 'sys/param.h'
 have_header 'sys/mount.h'
 have_header 'sys/statfs.h'
-have_func 'statfs'
-have_struct_member('struct statfs', 'f_type', ['sys/param.h', 'sys/mount.h', 'sys/statfs.h'])
-have_struct_member('struct statfs', 'f_fstypename', ['sys/param.h', 'sys/mount.h'])
+if have_func 'statfs'
+  have_struct_member('struct statfs', 'f_type', ['sys/param.h', 'sys/mount.h', 'sys/statfs.h'])
+  have_struct_member('struct statfs', 'f_fstypename', ['sys/param.h', 'sys/mount.h'])
+elsif have_func 'statvfs'
+  have_struct_member('struct statvfs', 'f_basetype', ['sys/types.h', 'sys/statvfs.h'])
+end
 
 # sysctl.h
 sys_headers = ['unistd.h', 'sys/sysctl.h', 'sys/types.h', 'sys/socket.h',

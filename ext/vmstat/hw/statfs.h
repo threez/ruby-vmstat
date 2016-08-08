@@ -39,3 +39,29 @@ VALUE vmstat_disk(VALUE self, VALUE path) {
 }
 #endif
 #endif
+
+#if defined(HAVE_STATVFS) && defined(HAVE_STRUCT_STATVFS_F_BASETYPE)
+#include <vmstat.h>
+#include <sys/types.h>
+#include <sys/statvfs.h>
+
+#ifndef VMSTAT_DISK
+#define VMSTAT_DISK
+VALUE vmstat_disk(VALUE self, VALUE path) {
+  VALUE disk = Qnil;
+  struct statvfs stat;
+
+  if (statvfs(StringValueCStr(path), &stat) == 0) {
+    disk = rb_funcall(rb_path2class("Vmstat::LinuxDisk"),
+           rb_intern("new"), 6, ID2SYM(rb_intern(stat.f_basetype)),
+                                path,
+                                ULL2NUM(stat.f_bsize),
+                                ULL2NUM(stat.f_bfree),
+                                ULL2NUM(stat.f_bavail),
+                                ULL2NUM(stat.f_blocks));
+  }
+
+  return disk;
+}
+#endif
+#endif
