@@ -17,7 +17,7 @@ This is a focused and fast library to get system information like:
 * Linux (>= 2.6)
 * OpenBSD
 * NetBSD
-* Solaris/SmartOS (partially)
+* Solaris/SmartOS
 
 *It might support (but not tested):*
 

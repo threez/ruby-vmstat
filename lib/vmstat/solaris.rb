@@ -1,3 +1,5 @@
+require "time"
+
 module Vmstat
   def self.cpu
     mpstat = `mpstat 1 1`.lines
@@ -8,6 +10,15 @@ module Vmstat
     end
   end
   
+  def self.boot_time
+    Time.parse(`who -b`.gsub(/^.*boot\s+/, "").gsub(/\s+/, " ").strip)
+  end
+
+  def self.load_average
+    uptime = `uptime`.gsub(",", ".")
+    LoadAverage.new(*uptime.gsub(/\d+(\.\d+)?/).to_a[-3..-1].map(&:to_f))
+  end
+
   def self.memory
     memstat = `echo ::memstat | mdb -k`
     vmstat = `vmstat -s`
