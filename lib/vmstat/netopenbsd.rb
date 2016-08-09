@@ -8,7 +8,8 @@ module Vmstat
     uvmexp = `vmstat -s`
 
     Memory.new(
-      extract_uvm_val(uvmexp, 'bytes per page'),       # pagesize
+      # pagesize call is not used to avoid double shell out
+      pagesize(uvmexp),       # pagesize
       extract_uvm_val(uvmexp, 'pages managed'),        # wired
       extract_uvm_val(uvmexp, 'pages active'),         # active
       extract_uvm_val(uvmexp, 'pages inactive'),       # inactive
@@ -16,6 +17,11 @@ module Vmstat
       extract_uvm_val(uvmexp, 'pagein operations'),    # pageins
       extract_uvm_val(uvmexp, 'pages being paged out') # pageouts
     )
+  end
+
+  def self.pagesize(uvmexp)
+    uvmexp ||= `vmstat -s`
+    extract_uvm_val(uvmexp, 'bytes per page')
   end
 
   def self.network_interfaces

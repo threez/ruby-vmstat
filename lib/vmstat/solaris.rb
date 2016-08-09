@@ -19,12 +19,16 @@ module Vmstat
     LoadAverage.new(*uptime.gsub(/\d+(\.\d+)?/).to_a[-3..-1].map(&:to_f))
   end
 
+  def self.pagesize
+    `pagesize`.to_i
+  end
+
   def self.memory
     memstat = `echo ::memstat | mdb -k`
     vmstat = `vmstat -s`
 
     Memory.new(
-      `pagesize`.to_i, # pagesize
+      pagesize,
       # wired
       extract_solaris_mval(memstat, 'Kernel', 'Boot pages', 'ZFS File Data'),
       # active
