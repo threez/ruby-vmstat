@@ -6,7 +6,7 @@ module Vmstat
     mpstat.shift # ignore header
     mpstat.map do |line|
       num, *rest, user, sys, _, idle = line.strip.split(/\s+/)
-      Cpu.new(num.to_i, user.to_i, sys.to_i, 0, idle.to_i]
+      Cpu.new(num.to_i, user.to_i, sys.to_i, 0, idle.to_i)
     end
   end
   
