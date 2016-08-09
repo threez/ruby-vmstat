@@ -1,73 +1,61 @@
-require "time"
-
 module Vmstat
   def self.cpu
-    mpstat = `mpstat 1 1`.lines
-    mpstat.shift # ignore header
-    mpstat.map do |line|
-      num, *rest, user, sys, _, idle = line.strip.split(/\s+/)
-      Cpu.new(num.to_i, user.to_i, sys.to_i, 0, idle.to_i)
+    kstat = `kstat -p "cpu_stat:::/idle|kernel|user/"`
+    cpus = Hash.new { |h, k| h[k] = Hash.new }
+
+    kstat.lines.each do |line|
+      _, _, cpu, key, value = line.strip.split(/:|\s+/)
+      values[cpu] = value
+    end
+
+    cpus.map do |k, v|
+      name = k.gsub(/cpu_stat/, "").to_i
+      Cpu.new(name, v["user"].to_i, v["kernel"].to_i, 0, v["idle"].to_i)
     end
   end
-  
+
   def self.boot_time
-    Time.parse(`who -b`.gsub(/^.*boot\s+/, "").gsub(/\s+/, " ").strip)
-  end
-
-  def self.load_average
-    uptime = `uptime`.gsub(",", ".")
-    LoadAverage.new(*uptime.gsub(/\d+(\.\d+)?/).to_a[-3..-1].map(&:to_f))
-  end
-
-  def self.pagesize
-    `pagesize`.to_i
+    Time.at(`kstat -p unix:::boot_time`.strip.split(/\s+/).last.to_i)
   end
 
   def self.memory
-    memstat = `echo ::memstat | mdb -k`
-    vmstat = `vmstat -s`
+    kstat = `kstat -p -n system_pages`
+    values = Hash.new
 
-    Memory.new(
-      pagesize,
-      # wired
-      extract_solaris_mval(memstat, 'Kernel', 'Boot pages', 'ZFS File Data'),
-      # active
-      extract_solaris_mval(memstat, 'Exec and libs'),
-      # inactive
-      extract_solaris_mval(memstat, 'Page cache', 'Anon'),
-      # free
-      extract_solaris_mval(memstat, 'Free \(cachelist\)', 'Free \(freelist\)'), 
-      extract_solaris_val(vmstat, 'page ins'), # pageins
-      extract_solaris_val(vmstat, 'page outs') # pageouts
-    )
+    kstat.lines.each do |line|
+      _, _, _, key, value = line.strip.split(/:|\s+/)
+      values[key] = value
+    end
+
+    total = values['pagestotal'].to_i
+    free = values['pagesfree'].to_i
+    locked = values['pageslocked'].to_i
+
+    Memory.new(pagesize,
+               locked, # wired
+               total - free - locked, # active
+               0, # inactive
+               free, # free
+               0, #pageins
+               0) #pageouts
   end
 
   def self.network_interfaces
-    dlstat = `dlstat -u R` 
-    dlstat.shift # ignore header
-    dlstat.map do |line|
-      # LINK    IPKTS   RBYTES    OPKTS   OBYTES
-      link, ipkts, rbytes, opkts, obytes = line.strip.split(/\s+/)
-      NetworkInterface.new(link, rbytes, 0, 0, obytes, 0, 
-        NetworkInterface::ETHERNET_TYPE)
-    end    
-  end
+    kstat = `kstat -p link:::`
+    itfs = Hash.new { |h, k| h[k] = Hash.new }
 
-  def self.extract_solaris_val(uvmexp, name)
-    regexp = Regexp.new('(\d+)\s' + name)
-    uvmexp.lines.grep(regexp) do |line|
-      return $1.to_i
+    kstat.lines.each do |line|
+      _, _, name, key, value = line.strip.split(/:|\s+/)
+      itfs[name][key] = value
     end
-  end
-  
-  def self.extract_solaris_mval(memstat, *names)
-    val = 0 
-    names.each do |name|
-      regexp = Regexp.new(name + '\s+(\d+)')
-      memstat.grep(regexp) do |line|
-        val += $1.to_i
-      end
+
+    itfs.map do |k, v|
+      NetworkInterface.new(k, v['rbytes64'].to_i,
+                              v['ierrors'].to_i,
+                              0,
+                              v['obytes64'].to_i,
+                              v['oerrors'].to_i,
+                              NetworkInterface::ETHERNET_TYPE)
     end
-    val
   end
 end
