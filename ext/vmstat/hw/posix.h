@@ -1,6 +1,8 @@
-#if defined(HAVE_UNISTD_H) && defined(HAVE_GETPAGESIZE)
+#if defined(HAVE_UNISTD_H)
 #include <unistd.h>
+#endif
 
+#if defined(HAVE_GETPAGESIZE)
 #ifndef VMSTAT_PAGESIZE
 #define VMSTAT_PAGESIZE
 VALUE vmstat_pagesize(VALUE self) {
@@ -9,7 +11,11 @@ VALUE vmstat_pagesize(VALUE self) {
 #endif
 #endif
 
-#if defined(HAVE_STDLIB_H) && defined(HAVE_GETLOADAVG)
+#if defined(HAVE_SYS_LOADAVG_H)
+#include <sys/loadavg.h>
+#endif
+
+#if defined(HAVE_GETLOADAVG)
 #ifndef VMSTAT_LOAD_AVERAGE
 #define VMSTAT_LOAD_AVERAGE
 VALUE vmstat_load_average(VALUE self) {

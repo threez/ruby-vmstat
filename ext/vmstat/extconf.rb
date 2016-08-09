@@ -2,9 +2,13 @@ require 'mkmf'
 
 # posix.h
 have_header 'unistd.h'
-have_func 'getpagesize'
+have_func 'getpagesize', 'unistd.h'
 have_header 'stdlib.h'
-have_func 'getloadavg'
+if have_header 'sys/loadavg.h'
+  have_func 'getloadavg', 'sys/loadavg.h'
+else
+  have_func 'getloadavg'
+end
 
 # mach.h
 have_header 'mach/mach.h'
