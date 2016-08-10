@@ -1,7 +1,8 @@
 module Vmstat
   def self.cpu
-    vmstat = `vmstat 1 1`.lines[2].chomp.split(/\s+/)
-    [Cpu.new(0, vmstat[-3].to_i, vmstat[-2].to_i, 0, vmstat[-1].to_i)]
+    cptime = `sysctl kern.cp_time`.split(/=/).last
+    user, nice, sys, irq, idle = cptime.split(/,/).map(&:to_i)
+    [Cpu.new(0, user, sys + irq, nice, idle)]
   end
   
   def self.memory
@@ -9,7 +10,7 @@ module Vmstat
 
     Memory.new(
       # pagesize call is not used to avoid double shell out
-      pagesize(uvmexp),       # pagesize
+      pagesize,       # pagesize
       extract_uvm_val(uvmexp, 'pages managed'),        # wired
       extract_uvm_val(uvmexp, 'pages active'),         # active
       extract_uvm_val(uvmexp, 'pages inactive'),       # inactive
@@ -17,11 +18,6 @@ module Vmstat
       extract_uvm_val(uvmexp, 'pagein operations'),    # pageins
       extract_uvm_val(uvmexp, 'pages being paged out') # pageouts
     )
-  end
-
-  def self.pagesize(uvmexp)
-    uvmexp ||= `vmstat -s`
-    extract_uvm_val(uvmexp, 'bytes per page')
   end
 
   def self.network_interfaces
