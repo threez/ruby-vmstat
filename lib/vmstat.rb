@@ -20,6 +20,7 @@ module Vmstat
   autoload :ProcFS,           "vmstat/procfs"
   autoload :Stub,             "vmstat/stub"
   autoload :Snapshot,         "vmstat/snapshot"
+  autoload :Solaris,          "vmstat/solaris"
   extend Stub # the default empty implementation
 
   # @!method self.boot_time
@@ -103,5 +104,5 @@ elsif RUBY_PLATFORM =~ /(net|open)bsd/
   require "vmstat/netopenbsd"
 elsif RUBY_PLATFORM =~ /solaris|smartos/
   # command based implementation of mem, net, cpu
-  require "vmstat/solaris"
+  Vmstat.send(:include, Vmstat::Solaris)
 end
