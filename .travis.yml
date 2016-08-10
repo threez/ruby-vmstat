@@ -1,7 +1,6 @@
 language: ruby
 os:
   - linux
-  - osx
 rvm:
   - ruby-2.2.5
   - ruby-head
