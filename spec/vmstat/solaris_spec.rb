@@ -191,7 +191,7 @@ unix:0:system_pages:physmem       489586
 unix:0:system_pages:pp_kernel     438675
 unix:0:system_pages:slowscan      100
 unix:0:system_pages:snaptime      314313.3248461\n"
-      elsif cmd = "kstat -p link:::"
+      elsif cmd == "kstat -p link:::"
         "link:0:e1000g0:ierrors 0
 link:0:e1000g0:oerrors 1
 link:0:e1000g0:rbytes64 1000
