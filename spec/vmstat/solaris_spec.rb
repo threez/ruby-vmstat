@@ -2,13 +2,7 @@ require 'spec_helper'
 
 describe Vmstat::Solaris do
   let(:solaris) do
-    c = Class.new do
-      extend Vmstat::Solaris::ClassMethods
-    
-      def self.pagesize
-        4096
-      end
-    end
+    c = Vmstat::Solaris
     
     def c.`(cmd)
       if cmd == 'kstat -p "cpu_stat:::/idle|kernel|user/"'

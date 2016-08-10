@@ -32,7 +32,7 @@ module Vmstat
         free = values['pagesfree'].to_i
         locked = values['pageslocked'].to_i
 
-        Memory.new(pagesize,
+        Memory.new(Vmstat.pagesize,
                    locked, # wired
                    total - free - locked, # active
                    0, # inactive
