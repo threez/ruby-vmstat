@@ -15,7 +15,7 @@ module Vmstat
     #     Since Linux 2.6.24:
     #     guest - which is the time spent running a virtual CPU for guest
     #             operating systems under the control of the Linux kernel.
-    CPU_DATA = /cpu(\d)#{'\s+(\d+)' * 4}/.freeze
+    CPU_DATA = /cpu(\d+)#{'\s+(\d+)' * 4}/.freeze
 
     # Grep the network stats from the procfs.
     # @example Format (from /proc/net/dev)
