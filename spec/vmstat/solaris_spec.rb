@@ -249,7 +249,7 @@ link:0:e1000g0:obytes64 2000\n"
     subject { solaris.memory }
 
     it { should be_a(Vmstat::Memory) }
-    if `pagesize`.chomp.to_i == 4096
+    if `getconf PAGESIZE`.chomp.to_i == 4096
       it do
         should == Vmstat::Memory.new(4096, 409145, 9018, 0, 61103, 0, 0)
       end

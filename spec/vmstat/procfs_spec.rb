@@ -30,7 +30,7 @@ describe Vmstat::ProcFS do
     subject { procfs.memory }
     
     it { should be_a(Vmstat::Memory) }
-    if `pagesize`.chomp.to_i == 4096
+    if `getconf PAGESIZE`.chomp.to_i == 4096
       it do
         should == Vmstat::Memory.new(4096, 4906, 6508, 8405, 107017, 64599, 1104)
       end
@@ -69,7 +69,7 @@ describe Vmstat::ProcFS do
     subject { procfs.task }
 
     it { should be_a(Vmstat::Task) }
-    if `pagesize`.chomp.to_i == 4096
+    if `getconf PAGESIZE`.chomp.to_i == 4096
       it { should == Vmstat::Task.new(4807, 515, 2000, 0) }
     end
   end
