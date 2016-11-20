@@ -30,13 +30,15 @@ describe Vmstat::ProcFS do
     subject { procfs.memory }
     
     it { should be_a(Vmstat::Memory) }
-    it do
-      should == Vmstat::Memory.new(4096, 4906, 6508, 8405, 107017, 64599, 1104)
-    end
+    if `pagesize`.chomp.to_i == 4096
+      it do
+        should == Vmstat::Memory.new(4096, 4906, 6508, 8405, 107017, 64599, 1104)
+      end
 
-    it "should have the right total" do
-      (subject.wired_bytes + subject.active_bytes + 
-       subject.inactive_bytes + subject.free_bytes).should == 507344 * 1024
+      it "should have the right total" do
+        (subject.wired_bytes + subject.active_bytes +
+         subject.inactive_bytes + subject.free_bytes).should == 507344 * 1024
+      end
     end
   end
 
@@ -67,6 +69,8 @@ describe Vmstat::ProcFS do
     subject { procfs.task }
 
     it { should be_a(Vmstat::Task) }
-    it { should == Vmstat::Task.new(4807, 515, 2000, 0) }
+    if `pagesize`.chomp.to_i == 4096
+      it { should == Vmstat::Task.new(4807, 515, 2000, 0) }
+    end
   end
 end
