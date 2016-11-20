@@ -21,7 +21,7 @@ describe Vmstat::ProcFS do
         Vmstat::Cpu.new(0, 311, 966, 0, 26788),
         Vmstat::Cpu.new(1, 351, 862, 0, 27263),
         Vmstat::Cpu.new(2, 324, 1092, 0, 26698),
-        Vmstat::Cpu.new(3, 326, 838, 0, 27581)
+        Vmstat::Cpu.new(30, 326, 838, 0, 27581)
       ]
     end
   end
