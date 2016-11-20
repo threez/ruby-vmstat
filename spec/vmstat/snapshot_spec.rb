@@ -28,7 +28,9 @@ describe Vmstat::Snapshot do
       its(:load_average) { should be_a(Vmstat::LoadAverage) }
       its(:memory) { should be_a(Vmstat::Memory) }
       its(:network_interfaces) { should be_a(Array) }
-      its(:task) { should be_a(Vmstat::Task) }
+      if RUBY_PLATFORM =~ /darwin|linux/
+        its(:task) { should be_a(Vmstat::Task) }
+      end
 
       context "first of cpu" do
         subject { snapshot.cpus.first }

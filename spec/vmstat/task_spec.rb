@@ -23,4 +23,5 @@ describe Vmstat::Task do
       its(:system_time_ms) { should be_a_kind_of(Numeric) }
     end
   end
-end
+end if RUBY_PLATFORM =~ /darwin|linux/
+
