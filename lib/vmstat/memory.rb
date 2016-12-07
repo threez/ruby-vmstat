@@ -15,11 +15,11 @@ module Vmstat
   # @attr [Fixnum] pageouts
   #   The number of pageouts.
   class Memory < Struct.new(:pagesize, :wired, :active, :inactive, :free,
-                            :pageins, :pageouts)
+                            :pageins, :pageouts, :available)
     # Calculate the wired bytes based of the wired pages.
     # @return [Fixnum] wired bytes
     def wired_bytes
-      wired *  pagesize
+      wired * pagesize
     end
 
     # Calculate the active bytes based of the active pages.
@@ -40,10 +40,16 @@ module Vmstat
       free * pagesize
     end
 
+    # Calculate the available bytes based of the active pages.
+    # @return [Fixnum] active bytes
+    def available_bytes
+      available * pagesize
+    end
+
     # Calculate the total bytes based of all pages
     # @return [Fixnum] total bytes
     def total_bytes
-      (wired + active + inactive + free) * pagesize  
+      (wired + active + inactive + free) * pagesize
     end
   end
 end
