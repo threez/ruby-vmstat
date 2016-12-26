@@ -45,6 +45,7 @@ module Vmstat
     #   Vmstat.memory # => #<struct Vmstat::Memory ...>
     def memory
       @pagesize ||= Vmstat.pagesize
+      has_available = false
 
       total = free = active = inactive = pageins = pageouts = available = 0
       procfs_file("meminfo") do |file|
@@ -56,7 +57,9 @@ module Vmstat
           case name
             when "MemTotal" then total = pages
             when "MemFree" then free = pages
-            when "MemAvailable" then available = pages
+            when "MemAvailable"
+                available = pages
+                has_available = true
             when "Active" then active = pages
             when "Inactive" then inactive = pages
           end
@@ -75,7 +78,11 @@ module Vmstat
         end
       end
 
-      Memory.new @pagesize, total-free-active-inactive, active, inactive, free, pageins, pageouts, available
+      mem_klass = has_available ? LinuxMemory : Memory
+      mem_klass.new(@pagesize, total-free-active-inactive, active,
+                    inactive, free, pageins, pageouts).tap do |mem|
+        mem.available = available if has_available
+      end
     end
 
     # Fetches the information for all available network devices.
