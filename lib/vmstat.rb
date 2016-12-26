@@ -15,6 +15,7 @@ module Vmstat
   autoload :Disk,             "vmstat/disk"
   autoload :LinuxDisk,        "vmstat/linux_disk"
   autoload :Memory,           "vmstat/memory"
+  autoload :LinuxMemory,      "vmstat/linux_memory"
   autoload :Task,             "vmstat/task"
   autoload :LoadAverage,      "vmstat/load_average"
   autoload :ProcFS,           "vmstat/procfs"

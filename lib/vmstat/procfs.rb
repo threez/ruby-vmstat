@@ -45,17 +45,21 @@ module Vmstat
     #   Vmstat.memory # => #<struct Vmstat::Memory ...>
     def memory
       @pagesize ||= Vmstat.pagesize
+      has_available = false
 
-      total = free = active = inactive = pageins = pageouts = 0
+      total = free = active = inactive = pageins = pageouts = available = 0
       procfs_file("meminfo") do |file|
         content = file.read(2048) # the requested information is in the first bytes
 
-        content.scan(/(\w+):\s+(\d+) kB/) do |name, kbytes| 
+        content.scan(/(\w+):\s+(\d+) kB/) do |name, kbytes|
           pages = (kbytes.to_i * 1024) / @pagesize
 
           case name
             when "MemTotal" then total = pages
             when "MemFree" then free = pages
+            when "MemAvailable"
+                available = pages
+                has_available = true
             when "Active" then active = pages
             when "Inactive" then inactive = pages
           end
@@ -74,8 +78,11 @@ module Vmstat
         end
       end
 
-      Memory.new @pagesize, total-free-active-inactive, active, inactive, free,
-                 pageins, pageouts
+      mem_klass = has_available ? LinuxMemory : Memory
+      mem_klass.new(@pagesize, total-free-active-inactive, active,
+                    inactive, free, pageins, pageouts).tap do |mem|
+        mem.available = available if has_available
+      end
     end
 
     # Fetches the information for all available network devices.
@@ -91,8 +98,8 @@ module Vmstat
             when /^lo/  then NetworkInterface::LOOPBACK_TYPE
           end
 
-          netifcs << NetworkInterface.new(columns[0].to_sym, columns[1].to_i, 
-                                          columns[3].to_i,   columns[4].to_i, 
+          netifcs << NetworkInterface.new(columns[0].to_sym, columns[1].to_i,
+                                          columns[3].to_i,   columns[4].to_i,
                                           columns[9].to_i,   columns[11].to_i,
                                           type)
         end
@@ -107,7 +114,7 @@ module Vmstat
 
       procfs_file("self", "stat") do |file|
         data = file.read.split(/ /)
-        Task.new(data[22].to_i / @pagesize, data[23].to_i, 
+        Task.new(data[22].to_i / @pagesize, data[23].to_i,
                  data[13].to_i * 1000, data[14].to_i * 1000)
       end
     end
