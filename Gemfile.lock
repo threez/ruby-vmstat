@@ -65,9 +65,10 @@ DEPENDENCIES
   guard-rspec
   rake (~> 11.3)
   rake-compiler
+  rb-fsevent (~> 0.9.1)
   rspec (~> 2.9)
   timecop
   vmstat!
 
 BUNDLED WITH
-   1.13.6
+   2.0.1
