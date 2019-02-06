@@ -21,7 +21,7 @@ describe Vmstat do
     end
 
     it "should filter loopback devices" do
-      Vmstat.loopback_devices.size.should == 1
+      Vmstat.loopback_devices.size.should >= 1
     end
   end
 
