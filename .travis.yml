@@ -3,10 +3,5 @@ os:
   - linux
 rvm:
   - ruby-2.2.6
-  - ruby-head
 env:
   - TRAVIS=true
-matrix:
-  allow_failures:
-  - rvm: ruby-head
-
