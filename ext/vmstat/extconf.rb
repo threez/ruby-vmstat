@@ -19,6 +19,7 @@ have_func 'mach_task_self'
 have_func 'vm_deallocate'
 have_func 'mach_error_string'
 have_func 'task_info'
+have_func 'host_statistics64'
 mach_headers = ['mach/mach.h', 'mach/mach_host.h']
 have_const 'KERN_SUCCESS', mach_headers
 have_const 'TASK_BASIC_INFO', mach_headers
