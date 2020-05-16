@@ -43,14 +43,25 @@ VALUE vmstat_cpu(VALUE self) {
 VALUE vmstat_memory(VALUE self) {
   VALUE memory = Qnil;
   vm_size_t pagesize;
-  uint host_count = HOST_VM_INFO_COUNT;
   kern_return_t err;
+
+#ifdef HAVE_HOST_STATISTICS64
+  vm_statistics64_data_t vm_stat;
+  uint host_count = HOST_VM_INFO64_COUNT;
+#else
   vm_statistics_data_t vm_stat;
+  uint host_count = HOST_VM_INFO_COUNT;
+#endif
   
   err = host_page_size(mach_host_self(), &pagesize);
+
   if (err == KERN_SUCCESS) {
-    err = host_statistics(mach_host_self(), HOST_VM_INFO,
-                          (host_info_t)&vm_stat, &host_count);
+#ifdef HAVE_HOST_STATISTICS64
+    err = host_statistics64(mach_host_self(), HOST_VM_INFO64, (host_info64_t)&vm_stat, &host_count);
+#else
+    err = host_statistics(mach_host_self(), HOST_VM_INFO, (host_info_t)&vm_stat, &host_count);
+#endif
+
     if (err == KERN_SUCCESS) {
       memory = rb_funcall(rb_path2class("Vmstat::Memory"),
                rb_intern("new"), 7, ULL2NUM(pagesize),
@@ -62,8 +73,8 @@ VALUE vmstat_memory(VALUE self) {
                                     ULL2NUM(vm_stat.pageouts));
     }
 
-    err = vm_deallocate(mach_task_self(), (vm_address_t)pagesize,
-                        (vm_size_t)host_count);
+    err = vm_deallocate(mach_task_self(), (vm_address_t)pagesize, (vm_size_t)host_count);
+
     if (err != KERN_SUCCESS) {
       rb_bug("vm_deallocate: %s\n", mach_error_string(err));
     }
