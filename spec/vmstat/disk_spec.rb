@@ -6,19 +6,60 @@ describe Vmstat::Disk do
                                      4096, 100, 200, 600 }
     subject { disk }
 
-    its(:type) { should == :hfs }
-    its(:origin) { should == "/dev/disk0" }
-    its(:mount) { should == "/mnt/test" }
+    describe '#type' do
+      subject { super().type }
+      it { is_expected.to eq(:hfs) }
+    end
 
-    its(:block_size) { should == 4096 }
-    its(:free_blocks) { should == 100 }
-    its(:available_blocks) { should == 200 }
-    its(:total_blocks) { should == 600 }
+    describe '#origin' do
+      subject { super().origin }
+      it { is_expected.to eq("/dev/disk0") }
+    end
 
-    its(:free_bytes) { should == 409600 }
-    its(:available_bytes) { should == 819200 }
-    its(:used_bytes) { should == 2048000 }
-    its(:total_bytes) { should == 2457600 }
+    describe '#mount' do
+      subject { super().mount }
+      it { is_expected.to eq("/mnt/test") }
+    end
+
+    describe '#block_size' do
+      subject { super().block_size }
+      it { is_expected.to eq(4096) }
+    end
+
+    describe '#free_blocks' do
+      subject { super().free_blocks }
+      it { is_expected.to eq(100) }
+    end
+
+    describe '#available_blocks' do
+      subject { super().available_blocks }
+      it { is_expected.to eq(200) }
+    end
+
+    describe '#total_blocks' do
+      subject { super().total_blocks }
+      it { is_expected.to eq(600) }
+    end
+
+    describe '#free_bytes' do
+      subject { super().free_bytes }
+      it { is_expected.to eq(409600) }
+    end
+
+    describe '#available_bytes' do
+      subject { super().available_bytes }
+      it { is_expected.to eq(819200) }
+    end
+
+    describe '#used_bytes' do
+      subject { super().used_bytes }
+      it { is_expected.to eq(2048000) }
+    end
+
+    describe '#total_bytes' do
+      subject { super().total_bytes }
+      it { is_expected.to eq(2457600) }
+    end
   end
 
   context "Vmstat#disk" do
@@ -26,27 +67,54 @@ describe Vmstat::Disk do
     subject { disk }
 
     it "should be a vmstat disk object" do
-      should be_a(described_class)
+      is_expected.to be_a(described_class)
     end
 
     context "methods" do
-      it { should respond_to(:type) }
-      it { should respond_to(:origin) }
-      it { should respond_to(:mount) }
-      it { should respond_to(:free_bytes) }
-      it { should respond_to(:available_bytes) }
-      it { should respond_to(:used_bytes) }
-      it { should respond_to(:total_bytes) }
+      it { is_expected.to respond_to(:type) }
+      it { is_expected.to respond_to(:origin) }
+      it { is_expected.to respond_to(:mount) }
+      it { is_expected.to respond_to(:free_bytes) }
+      it { is_expected.to respond_to(:available_bytes) }
+      it { is_expected.to respond_to(:used_bytes) }
+      it { is_expected.to respond_to(:total_bytes) }
     end
     
     context "content" do
-      its(:type) { should be_a(Symbol) }
-      its(:origin) { should be_a(String) }
-      its(:mount) { should be_a(String) }
-      its(:free_bytes) { should be_a_kind_of(Numeric) }
-      its(:available_bytes) { should be_a_kind_of(Numeric) }
-      its(:used_bytes) { should be_a_kind_of(Numeric) }
-      its(:total_bytes) { should be_a_kind_of(Numeric) }
+      describe '#type' do
+        subject { super().type }
+        it { is_expected.to be_a(Symbol) }
+      end
+
+      describe '#origin' do
+        subject { super().origin }
+        it { is_expected.to be_a(String) }
+      end
+
+      describe '#mount' do
+        subject { super().mount }
+        it { is_expected.to be_a(String) }
+      end
+
+      describe '#free_bytes' do
+        subject { super().free_bytes }
+        it { is_expected.to be_a_kind_of(Numeric) }
+      end
+
+      describe '#available_bytes' do
+        subject { super().available_bytes }
+        it { is_expected.to be_a_kind_of(Numeric) }
+      end
+
+      describe '#used_bytes' do
+        subject { super().used_bytes }
+        it { is_expected.to be_a_kind_of(Numeric) }
+      end
+
+      describe '#total_bytes' do
+        subject { super().total_bytes }
+        it { is_expected.to be_a_kind_of(Numeric) }
+      end
     end
   end
 end

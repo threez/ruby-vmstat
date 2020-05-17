@@ -22,7 +22,7 @@ Gem::Specification.new do |gem|
   gem.extensions    = ["ext/vmstat/extconf.rb"]
 
   gem.add_development_dependency('rake', '~> 11.3')
-  gem.add_development_dependency('rspec', '~> 2.9')
+  gem.add_development_dependency('rspec', '~> 3.9')
   gem.add_development_dependency('rake-compiler')
   gem.add_development_dependency('guard-rspec')
   gem.add_development_dependency('timecop')

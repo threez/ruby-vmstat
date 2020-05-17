@@ -6,21 +6,65 @@ describe Vmstat::Memory do
                                      1560532, 0 }
     subject { disk }
 
-    its(:pagesize) { should == 4096 }
+    describe '#pagesize' do
+      subject { super().pagesize }
+      it { is_expected.to eq(4096) }
+    end
 
-    its(:wired) { should == 775581 }
-    its(:active) { should == 196146 }
-    its(:inactive) { should == 437495 }
-    its(:free) { should == 685599 }
+    describe '#wired' do
+      subject { super().wired }
+      it { is_expected.to eq(775581) }
+    end
 
-    its(:wired_bytes) { should == 3176779776 }
-    its(:active_bytes) { should == 803414016 }
-    its(:inactive_bytes) { should == 1791979520 }
-    its(:free_bytes) { should == 2808213504 }
-    its(:total_bytes) { should == 8580386816 }
+    describe '#active' do
+      subject { super().active }
+      it { is_expected.to eq(196146) }
+    end
 
-    its(:pageins) { should == 1560532 }
-    its(:pageouts) { should == 0 }
+    describe '#inactive' do
+      subject { super().inactive }
+      it { is_expected.to eq(437495) }
+    end
+
+    describe '#free' do
+      subject { super().free }
+      it { is_expected.to eq(685599) }
+    end
+
+    describe '#wired_bytes' do
+      subject { super().wired_bytes }
+      it { is_expected.to eq(3176779776) }
+    end
+
+    describe '#active_bytes' do
+      subject { super().active_bytes }
+      it { is_expected.to eq(803414016) }
+    end
+
+    describe '#inactive_bytes' do
+      subject { super().inactive_bytes }
+      it { is_expected.to eq(1791979520) }
+    end
+
+    describe '#free_bytes' do
+      subject { super().free_bytes }
+      it { is_expected.to eq(2808213504) }
+    end
+
+    describe '#total_bytes' do
+      subject { super().total_bytes }
+      it { is_expected.to eq(8580386816) }
+    end
+
+    describe '#pageins' do
+      subject { super().pageins }
+      it { is_expected.to eq(1560532) }
+    end
+
+    describe '#pageouts' do
+      subject { super().pageouts }
+      it { is_expected.to eq(0) }
+    end
   end
 
   context "Vmstat#memory" do
@@ -28,39 +72,85 @@ describe Vmstat::Memory do
     subject { memory }
 
     it "should be a vmstat memory object" do
-      should be_a(described_class)
+      is_expected.to be_a(described_class)
     end
 
     context "methods" do
-      it { should respond_to(:pagesize) }
-      it { should respond_to(:wired) }
-      it { should respond_to(:active) }
-      it { should respond_to(:inactive) }
-      it { should respond_to(:free) }
-      it { should respond_to(:pageins) }
-      it { should respond_to(:pageouts) }
+      it { is_expected.to respond_to(:pagesize) }
+      it { is_expected.to respond_to(:wired) }
+      it { is_expected.to respond_to(:active) }
+      it { is_expected.to respond_to(:inactive) }
+      it { is_expected.to respond_to(:free) }
+      it { is_expected.to respond_to(:pageins) }
+      it { is_expected.to respond_to(:pageouts) }
 
-      it { should respond_to(:wired_bytes) }
-      it { should respond_to(:active_bytes) }
-      it { should respond_to(:inactive_bytes) }
-      it { should respond_to(:free_bytes) }
-      it { should respond_to(:total_bytes)}
+      it { is_expected.to respond_to(:wired_bytes) }
+      it { is_expected.to respond_to(:active_bytes) }
+      it { is_expected.to respond_to(:inactive_bytes) }
+      it { is_expected.to respond_to(:free_bytes) }
+      it { is_expected.to respond_to(:total_bytes)}
     end
 
     context "content" do
-      its(:pagesize) { should be_a_kind_of(Numeric) }
-      its(:wired) { should be_a_kind_of(Numeric) }
-      its(:active) { should be_a_kind_of(Numeric) }
-      its(:inactive) { should be_a_kind_of(Numeric) }
-      its(:free) { should be_a_kind_of(Numeric) }
-      its(:pageins) { should be_a_kind_of(Numeric) }
-      its(:pageouts) { should be_a_kind_of(Numeric) }
+      describe '#pagesize' do
+        subject { super().pagesize }
+        it { is_expected.to be_a_kind_of(Numeric) }
+      end
 
-      its(:wired_bytes) { should be_a_kind_of(Numeric) }
-      its(:active_bytes) { should be_a_kind_of(Numeric) }
-      its(:inactive_bytes) { should be_a_kind_of(Numeric) }
-      its(:free_bytes) { should be_a_kind_of(Numeric) }
-      its(:total_bytes) { should be_a_kind_of(Numeric) }
+      describe '#wired' do
+        subject { super().wired }
+        it { is_expected.to be_a_kind_of(Numeric) }
+      end
+
+      describe '#active' do
+        subject { super().active }
+        it { is_expected.to be_a_kind_of(Numeric) }
+      end
+
+      describe '#inactive' do
+        subject { super().inactive }
+        it { is_expected.to be_a_kind_of(Numeric) }
+      end
+
+      describe '#free' do
+        subject { super().free }
+        it { is_expected.to be_a_kind_of(Numeric) }
+      end
+
+      describe '#pageins' do
+        subject { super().pageins }
+        it { is_expected.to be_a_kind_of(Numeric) }
+      end
+
+      describe '#pageouts' do
+        subject { super().pageouts }
+        it { is_expected.to be_a_kind_of(Numeric) }
+      end
+
+      describe '#wired_bytes' do
+        subject { super().wired_bytes }
+        it { is_expected.to be_a_kind_of(Numeric) }
+      end
+
+      describe '#active_bytes' do
+        subject { super().active_bytes }
+        it { is_expected.to be_a_kind_of(Numeric) }
+      end
+
+      describe '#inactive_bytes' do
+        subject { super().inactive_bytes }
+        it { is_expected.to be_a_kind_of(Numeric) }
+      end
+
+      describe '#free_bytes' do
+        subject { super().free_bytes }
+        it { is_expected.to be_a_kind_of(Numeric) }
+      end
+
+      describe '#total_bytes' do
+        subject { super().total_bytes }
+        it { is_expected.to be_a_kind_of(Numeric) }
+      end
     end
   end
 end
