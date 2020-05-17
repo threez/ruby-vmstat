@@ -24,10 +24,9 @@ GEM
       guard (~> 2.1)
       guard-compat (~> 1.1)
       rspec (>= 2.99.0, < 4.0)
-    listen (3.1.5)
-      rb-fsevent (~> 0.9, >= 0.9.4)
-      rb-inotify (~> 0.9, >= 0.9.7)
-      ruby_dep (~> 1.2)
+    listen (3.2.1)
+      rb-fsevent (~> 0.10, >= 0.10.3)
+      rb-inotify (~> 0.9, >= 0.9.10)
     lumberjack (1.2.4)
     method_source (1.0.0)
     nenv (0.3.0)
@@ -40,7 +39,7 @@ GEM
     rake (11.3.0)
     rake-compiler (1.1.0)
       rake
-    rb-fsevent (0.9.8)
+    rb-fsevent (0.10.4)
     rb-inotify (0.10.1)
       ffi (~> 1.0)
     rspec (3.9.0)
@@ -56,23 +55,20 @@ GEM
       diff-lcs (>= 1.2.0, < 2.0)
       rspec-support (~> 3.9.0)
     rspec-support (3.9.3)
-    ruby_dep (1.5.0)
     shellany (0.0.1)
     thor (1.0.1)
     timecop (0.9.1)
 
 PLATFORMS
   ruby
-  x86_64-darwin-19
 
 DEPENDENCIES
   guard-rspec
   rake (~> 11.3)
   rake-compiler
-  rb-fsevent (~> 0.9.1)
   rspec (~> 3.9)
   timecop
   vmstat!
 
 BUNDLED WITH
-   2.1.4
+   1.17.3
