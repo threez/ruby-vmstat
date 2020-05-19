@@ -5,19 +5,30 @@ describe Vmstat::LoadAverage do
     subject { Vmstat.load_average }
 
     it "should be an vmstat load average object" do
-      should be_a(described_class)
+      is_expected.to be_a(described_class)
     end
 
     context "methods" do
-      it { should respond_to(:one_minute) }
-      it { should respond_to(:five_minutes) }
-      it { should respond_to(:fifteen_minutes) }
+      it { is_expected.to respond_to(:one_minute) }
+      it { is_expected.to respond_to(:five_minutes) }
+      it { is_expected.to respond_to(:fifteen_minutes) }
     end
 
     context "content" do
-      its(:one_minute) { should be_a(Float) }
-      its(:five_minutes) { should be_a(Float) }
-      its(:fifteen_minutes) { should be_a(Float) }
+      describe '#one_minute' do
+        subject { super().one_minute }
+        it { is_expected.to be_a(Float) }
+      end
+
+      describe '#five_minutes' do
+        subject { super().five_minutes }
+        it { is_expected.to be_a(Float) }
+      end
+
+      describe '#fifteen_minutes' do
+        subject { super().fifteen_minutes }
+        it { is_expected.to be_a(Float) }
+      end
     end
   end
 end

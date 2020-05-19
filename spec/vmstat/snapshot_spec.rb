@@ -6,45 +6,75 @@ describe Vmstat::Snapshot do
     subject { snapshot }
 
     it "should be an vmstat load snapshot object" do
-      should be_a(described_class)
+      is_expected.to be_a(described_class)
     end
 
     context "methods" do
-      it { should respond_to(:at) }
-      it { should respond_to(:boot_time) }
-      it { should respond_to(:cpus) }
-      it { should respond_to(:disks) }
-      it { should respond_to(:load_average) }
-      it { should respond_to(:memory) }
-      it { should respond_to(:network_interfaces) }
-      it { should respond_to(:task) }
+      it { is_expected.to respond_to(:at) }
+      it { is_expected.to respond_to(:boot_time) }
+      it { is_expected.to respond_to(:cpus) }
+      it { is_expected.to respond_to(:disks) }
+      it { is_expected.to respond_to(:load_average) }
+      it { is_expected.to respond_to(:memory) }
+      it { is_expected.to respond_to(:network_interfaces) }
+      it { is_expected.to respond_to(:task) }
     end
 
     context "content" do
-      its(:at) { should be_a(Time) }
-      its(:boot_time) { should be_a(Time) }
-      its(:cpus) { should be_a(Array) }
-      its(:disks) { should be_a(Array) }
-      its(:load_average) { should be_a(Vmstat::LoadAverage) }
-      its(:memory) { should be_a(Vmstat::Memory) }
-      its(:network_interfaces) { should be_a(Array) }
+      describe '#at' do
+        subject { super().at }
+        it { is_expected.to be_a(Time) }
+      end
+
+      describe '#boot_time' do
+        subject { super().boot_time }
+        it { is_expected.to be_a(Time) }
+      end
+
+      describe '#cpus' do
+        subject { super().cpus }
+        it { is_expected.to be_a(Array) }
+      end
+
+      describe '#disks' do
+        subject { super().disks }
+        it { is_expected.to be_a(Array) }
+      end
+
+      describe '#load_average' do
+        subject { super().load_average }
+        it { is_expected.to be_a(Vmstat::LoadAverage) }
+      end
+
+      describe '#memory' do
+        subject { super().memory }
+        it { is_expected.to be_a(Vmstat::Memory) }
+      end
+
+      describe '#network_interfaces' do
+        subject { super().network_interfaces }
+        it { is_expected.to be_a(Array) }
+      end
       if RUBY_PLATFORM =~ /darwin|linux/
-        its(:task) { should be_a(Vmstat::Task) }
+        describe '#task' do
+          subject { super().task }
+          it { is_expected.to be_a(Vmstat::Task) }
+        end
       end
 
       context "first of cpu" do
         subject { snapshot.cpus.first }
-        it { should be_a(Vmstat::Cpu) }
+        it { is_expected.to be_a(Vmstat::Cpu) }
       end
       
       context "first of disks" do
         subject { snapshot.disks.first }
-        it { should be_a(Vmstat::Disk) }
+        it { is_expected.to be_a(Vmstat::Disk) }
       end
 
       context "first of network interfaces" do
         subject { snapshot.network_interfaces.first }
-        it { should be_a(Vmstat::NetworkInterface) }
+        it { is_expected.to be_a(Vmstat::NetworkInterface) }
       end
     end
   end

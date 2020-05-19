@@ -206,9 +206,9 @@ link:0:e1000g0:obytes64 2000\n"
   context "#cpu" do
     subject { solaris.cpu }
 
-    it { should be_a(Array)}
+    it { is_expected.to be_a(Array)}
     it do
-      should == [
+      is_expected.to eq([
         Vmstat::Cpu.new(0, 64919001, 89137335, 0, 2325343762),
         Vmstat::Cpu.new(1, 78174710, 78457429, 0, 2322767706),
         Vmstat::Cpu.new(2, 38603497, 50617796, 0, 2390178542),
@@ -241,17 +241,17 @@ link:0:e1000g0:obytes64 2000\n"
         Vmstat::Cpu.new(29, 19970999, 27198273, 0, 2432230501),
         Vmstat::Cpu.new(30, 14676176, 20310412, 0, 2444413183),
         Vmstat::Cpu.new(31, 14400967, 22515695, 0, 2442483106)
-      ]
+      ])
     end
   end
 
   context "#memory" do
     subject { solaris.memory }
 
-    it { should be_a(Vmstat::Memory) }
+    it { is_expected.to be_a(Vmstat::Memory) }
     if `getconf PAGESIZE`.chomp.to_i == 4096
       it do
-        should == Vmstat::Memory.new(4096, 409145, 9018, 0, 61103, 0, 0)
+        is_expected.to eq(Vmstat::Memory.new(4096, 409145, 9018, 0, 61103, 0, 0))
       end
     end
   end
@@ -259,19 +259,19 @@ link:0:e1000g0:obytes64 2000\n"
   context "#boot_time" do
     subject { solaris.boot_time }
 
-    it { should be_a(Time) }
-    it { should == Time.at(1470765992) }
+    it { is_expected.to be_a(Time) }
+    it { is_expected.to eq(Time.at(1470765992)) }
   end
 
   context "#network_interfaces" do
     subject { solaris.network_interfaces }
 
-    it { should be_a(Array) }
+    it { is_expected.to be_a(Array) }
     it do
-      should == [
+      is_expected.to eq([
         Vmstat::NetworkInterface.new(:e1000g0, 1000, 0, 0, 2000, 1,
                                      Vmstat::NetworkInterface::ETHERNET_TYPE)
-      ]
+      ])
     end
   end
 end

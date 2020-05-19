@@ -5,7 +5,7 @@ describe Vmstat::Cpu do
     let(:cpu) { Vmstat.cpu }
 
     it "should return an array of ethernet information" do
-      cpu.should be_a(Array)
+      expect(cpu).to be_a(Array)
     end
 
     context "first cpu" do
@@ -13,21 +13,36 @@ describe Vmstat::Cpu do
       subject { first_cpu }
 
       it "should return a vmstat cpu object" do
-        should be_a(described_class)
+        is_expected.to be_a(described_class)
       end
 
       context "methods" do
-        it { should respond_to(:user) }
-        it { should respond_to(:system) }
-        it { should respond_to(:nice) }
-        it { should respond_to(:idle) }
+        it { is_expected.to respond_to(:user) }
+        it { is_expected.to respond_to(:system) }
+        it { is_expected.to respond_to(:nice) }
+        it { is_expected.to respond_to(:idle) }
       end
 
       context "content" do
-        its(:user) { should be_a_kind_of(Numeric) }
-        its(:system) { should be_a_kind_of(Numeric) }
-        its(:nice) { should be_a_kind_of(Numeric) }
-        its(:idle) { should be_a_kind_of(Numeric) }
+        describe '#user' do
+          subject { super().user }
+          it { is_expected.to be_a_kind_of(Numeric) }
+        end
+
+        describe '#system' do
+          subject { super().system }
+          it { is_expected.to be_a_kind_of(Numeric) }
+        end
+
+        describe '#nice' do
+          subject { super().nice }
+          it { is_expected.to be_a_kind_of(Numeric) }
+        end
+
+        describe '#idle' do
+          subject { super().idle }
+          it { is_expected.to be_a_kind_of(Numeric) }
+        end
       end
     end
   end
