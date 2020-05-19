@@ -36,7 +36,7 @@ GEM
     pry (0.13.1)
       coderay (~> 1.1)
       method_source (~> 1.0)
-    rake (11.3.0)
+    rake (13.0.1)
     rake-compiler (1.1.0)
       rake
     rb-fsevent (0.10.4)
@@ -64,7 +64,7 @@ PLATFORMS
 
 DEPENDENCIES
   guard-rspec
-  rake (~> 11.3)
+  rake (~> 13.0)
   rake-compiler
   rspec (~> 3.9)
   timecop
