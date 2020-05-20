@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 module Vmstat
   # Gathered the network interface information.
   # @attr [Symbol] name the system name for the network interface.
