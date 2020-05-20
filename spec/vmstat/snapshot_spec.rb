@@ -1,15 +1,17 @@
+# frozen_string_literal: true
+
 require 'spec_helper'
 
 describe Vmstat::Snapshot do
-  context "Vmstat#snapshot" do
+  context 'Vmstat#snapshot' do
     let(:snapshot) { Vmstat.snapshot }
     subject { snapshot }
 
-    it "should be an vmstat load snapshot object" do
+    it 'should be an vmstat load snapshot object' do
       is_expected.to be_a(described_class)
     end
 
-    context "methods" do
+    context 'methods' do
       it { is_expected.to respond_to(:at) }
       it { is_expected.to respond_to(:boot_time) }
       it { is_expected.to respond_to(:cpus) }
@@ -20,7 +22,7 @@ describe Vmstat::Snapshot do
       it { is_expected.to respond_to(:task) }
     end
 
-    context "content" do
+    context 'content' do
       describe '#at' do
         subject { super().at }
         it { is_expected.to be_a(Time) }
@@ -62,17 +64,17 @@ describe Vmstat::Snapshot do
         end
       end
 
-      context "first of cpu" do
+      context 'first of cpu' do
         subject { snapshot.cpus.first }
         it { is_expected.to be_a(Vmstat::Cpu) }
       end
-      
-      context "first of disks" do
+
+      context 'first of disks' do
         subject { snapshot.disks.first }
         it { is_expected.to be_a(Vmstat::Disk) }
       end
 
-      context "first of network interfaces" do
+      context 'first of network interfaces' do
         subject { snapshot.network_interfaces.first }
         it { is_expected.to be_a(Vmstat::NetworkInterface) }
       end
