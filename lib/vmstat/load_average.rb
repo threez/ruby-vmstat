@@ -1,6 +1,8 @@
+# frozen_string_literal: true
+
 module Vmstat
   # In UNIX computing, the system load is a measure of the amount of
-  # computational work that a computer system performs. The load average 
+  # computational work that a computer system performs. The load average
   # represents the average system load over a period of time.
   # Source: wikipedia(en).
   # @attr [Float] one_minute The load for the last minute.
