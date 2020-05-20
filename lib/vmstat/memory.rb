@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 module Vmstat
   # Gathered memory data snapshot.
   # @attr [Fixnum] pagesize
