@@ -47,8 +47,8 @@ sys_headers = ['unistd.h', 'sys/sysctl.h', 'sys/types.h', 'sys/socket.h',
 sys_headers.each { |header| have_header header }
 sys_headers << 'net/if_mib.h'
 
-if not have_header('net/if_mib.h')
-  puts "-> net/if_mib.h can't be checked individually, apply workaround for macOS mojave"
+unless have_header('net/if_mib.h')
+  warn "-> net/if_mib.h can't be checked individually, apply workaround for macOS mojave"
   have_header 'net/if_mib.h', ['net/if_types.h', 'net/if.h']
 end
 
