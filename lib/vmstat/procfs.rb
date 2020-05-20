@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 module Vmstat
   # Implementation of performance metrics gathering for linux and other os with
   # the proc file system.
@@ -6,11 +8,11 @@ module Vmstat
     # @example Format
     #     (num) user nice system idle iowait irq softirq steal
     # @example manpage
-    #     iowait - time waiting for I/O to complete (since 2.5.41)  
+    #     iowait - time waiting for I/O to complete (since 2.5.41)
     #     irq - time servicing interrupts (since 2.6.0-test4)
     #     softirq - time servicing softirqs (since 2.6.0-test4)
     #     Since Linux 2.6.11:
-    #     steal - stolen time, which is the time spent in other operating 
+    #     steal - stolen time, which is the time spent in other operating
     #             systems when running in a virtualized environment
     #     Since Linux 2.6.24:
     #     guest - which is the time spent running a virtual CPU for guest
@@ -23,7 +25,7 @@ module Vmstat
     #    face |bytes    packets errs drop fifo frame compressed multicast|bytes    packets errs drop fifo colls carrier compressed
     # @example Data
     #   eth0:   33660     227    0    0    0     0          0         0    36584     167    0    0    0     0       0          0
-    NET_DATA = /(\w+):#{'\s*(\d+)' * 16}/
+    NET_DATA = /(\w+):#{'\s*(\d+)' * 16}/.freeze
 
     # Fetches the cpu statistics (usage counter for user, nice, system and idle)
     # @return [Array<Vmstat::Cpu>] the array of cpu counter
@@ -31,7 +33,7 @@ module Vmstat
     #   Vmstat.cpu # => [#<struct Vmstat::Cpu ...>, #<struct Vmstat::Cpu ...>]
     def cpu
       cpus = []
-      procfs_file("stat") do |file|
+      procfs_file('stat') do |file|
         file.read.scan(CPU_DATA) do |i, user, nice, system, idle|
           cpus << Cpu.new(i.to_i, user.to_i, system.to_i, nice.to_i, idle.to_i)
         end
@@ -48,38 +50,34 @@ module Vmstat
       has_available = false
 
       total = free = active = inactive = pageins = pageouts = available = 0
-      procfs_file("meminfo") do |file|
+      procfs_file('meminfo') do |file|
         content = file.read(2048) # the requested information is in the first bytes
 
         content.scan(/(\w+):\s+(\d+) kB/) do |name, kbytes|
           pages = (kbytes.to_i * 1024) / @pagesize
 
           case name
-            when "MemTotal" then total = pages
-            when "MemFree" then free = pages
-            when "MemAvailable"
-                available = pages
-                has_available = true
-            when "Active" then active = pages
-            when "Inactive" then inactive = pages
+          when 'MemTotal' then total = pages
+          when 'MemFree' then free = pages
+          when 'MemAvailable'
+            available = pages
+            has_available = true
+          when 'Active' then active = pages
+          when 'Inactive' then inactive = pages
           end
         end
       end
 
-      procfs_file("vmstat") do |file|
+      procfs_file('vmstat') do |file|
         content = file.read
 
-        if content =~ /pgpgin\s+(\d+)/
-          pageins = $1.to_i
-        end
+        pageins = Regexp.last_match(1).to_i if content =~ /pgpgin\s+(\d+)/
 
-        if content =~ /pgpgout\s+(\d+)/
-          pageouts = $1.to_i
-        end
+        pageouts = Regexp.last_match(1).to_i if content =~ /pgpgout\s+(\d+)/
       end
 
       mem_klass = has_available ? LinuxMemory : Memory
-      mem_klass.new(@pagesize, total-free-active-inactive, active,
+      mem_klass.new(@pagesize, total - free - active - inactive, active,
                     inactive, free, pageins, pageouts).tap do |mem|
         mem.available = available if has_available
       end
@@ -91,11 +89,11 @@ module Vmstat
     #   Vmstat.network_interfaces # => [#<struct Vmstat::NetworkInterface ...>, ...]
     def network_interfaces
       netifcs = []
-      procfs_file("net", "dev") do |file|
+      procfs_file('net', 'dev') do |file|
         file.read.scan(NET_DATA) do |columns|
           type = case columns[0]
-            when /^eth/ then NetworkInterface::ETHERNET_TYPE
-            when /^lo/  then NetworkInterface::LOOPBACK_TYPE
+                 when /^eth/ then NetworkInterface::ETHERNET_TYPE
+                 when /^lo/  then NetworkInterface::LOOPBACK_TYPE
           end
 
           netifcs << NetworkInterface.new(columns[0].to_sym, columns[1].to_i,
@@ -112,7 +110,7 @@ module Vmstat
     def task
       @pagesize ||= Vmstat.pagesize
 
-      procfs_file("self", "stat") do |file|
+      procfs_file('self', 'stat') do |file|
         data = file.read.split(/ /)
         Task.new(data[22].to_i / @pagesize, data[23].to_i,
                  data[13].to_i * 1000, data[14].to_i * 1000)
@@ -124,7 +122,7 @@ module Vmstat
     # @example
     #   Vmstat.boot_time # => 2012-10-09 18:42:37 +0200
     def boot_time
-      raw = procfs_file("uptime") { |file| file.read }
+      raw = procfs_file('uptime', &:read)
       Time.now - raw.split(/\s/).first.to_f
     end
 
@@ -133,7 +131,7 @@ module Vmstat
     #   procfs_path # => "/proc"
     # @api private
     def procfs_path
-      "/proc".freeze
+      '/proc'
     end
 
     # Opens a proc file system file handle and returns the handle in the
@@ -147,7 +145,7 @@ module Vmstat
     # @api private
     def procfs_file(*names, &block)
       path = File.join(procfs_path, *names)
-      File.open(path, "r", &block)
+      File.open(path, 'r', &block)
     end
   end
 end
