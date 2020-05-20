@@ -1,9 +1,11 @@
+# frozen_string_literal: true
+
 require 'spec_helper'
 
 describe Vmstat::Solaris do
   let(:solaris) do
     c = Vmstat::Solaris
-    
+
     def c.`(cmd)
       if cmd == 'kstat -p "cpu_stat:::/idle|kernel|user/"'
         "cpu_stat:0:cpu_stat0:idle       2325343762
@@ -166,9 +168,9 @@ cpu_stat:31:cpu_stat31:idlethread       3345414215
 cpu_stat:31:cpu_stat31:kernel   22515695
 cpu_stat:31:cpu_stat31:kernel_asflt     0
 cpu_stat:31:cpu_stat31:user     14400967\n"
-      elsif cmd == "kstat -p unix:::boot_time"
+      elsif cmd == 'kstat -p unix:::boot_time'
         "unix:0:system_misc:boot_time     1470765992\n"
-      elsif cmd == "kstat -p -n system_pages"
+      elsif cmd == 'kstat -p -n system_pages'
         "unix:0:system_pages:availrmem     70121
 unix:0:system_pages:crtime        116.1198523
 unix:0:system_pages:desfree       3744
@@ -191,7 +193,7 @@ unix:0:system_pages:physmem       489586
 unix:0:system_pages:pp_kernel     438675
 unix:0:system_pages:slowscan      100
 unix:0:system_pages:snaptime      314313.3248461\n"
-      elsif cmd == "kstat -p link:::"
+      elsif cmd == 'kstat -p link:::'
         "link:0:e1000g0:ierrors 0
 link:0:e1000g0:oerrors 1
 link:0:e1000g0:rbytes64 1000
@@ -202,76 +204,76 @@ link:0:e1000g0:obytes64 2000\n"
     end
     c
   end
-  
-  context "#cpu" do
+
+  context '#cpu' do
     subject { solaris.cpu }
 
-    it { is_expected.to be_a(Array)}
+    it { is_expected.to be_a(Array) }
     it do
       is_expected.to eq([
-        Vmstat::Cpu.new(0, 64919001, 89137335, 0, 2325343762),
-        Vmstat::Cpu.new(1, 78174710, 78457429, 0, 2322767706),
-        Vmstat::Cpu.new(2, 38603497, 50617796, 0, 2390178542),
-        Vmstat::Cpu.new(3, 42552751, 46044221, 0, 2390802861),
-        Vmstat::Cpu.new(4, 18826062, 23983506, 0, 2436590263),
-        Vmstat::Cpu.new(5, 17800281, 25630307, 0, 2435969240),
-        Vmstat::Cpu.new(6, 22325909, 24414413, 0, 2432659504),
-        Vmstat::Cpu.new(7, 20896150, 28094309, 0, 2430409364),
-        Vmstat::Cpu.new(8, 15412864, 20799721, 0, 2443187236),
-        Vmstat::Cpu.new(9, 15016328, 23787482, 0, 2440596009),
-        Vmstat::Cpu.new(10, 21771975, 30059932, 0, 2427567910),
-        Vmstat::Cpu.new(11, 20183500, 27388335, 0, 2431827979),
-        Vmstat::Cpu.new(12, 15298846, 21276397, 0, 2442824569),
-        Vmstat::Cpu.new(13, 13929592, 22081759, 0, 2443388458),
-        Vmstat::Cpu.new(14, 21278693, 23352419, 0, 2434768696),
-        Vmstat::Cpu.new(15, 19834642, 27050642, 0, 2432514522),
-        Vmstat::Cpu.new(16, 20984253, 21833225, 0, 2436582325),
-        Vmstat::Cpu.new(17, 17568236, 29580663, 0, 2432250902),
-        Vmstat::Cpu.new(18, 13608419, 18480841, 0, 2447310538),
-        Vmstat::Cpu.new(19, 12552980, 20384068, 0, 2446462748),
-        Vmstat::Cpu.new(20, 18713575, 20976077, 0, 2439710143),
-        Vmstat::Cpu.new(21, 18770245, 26063716, 0, 2434565830),
-        Vmstat::Cpu.new(22, 12784738, 18718466, 0, 2447896586),
-        Vmstat::Cpu.new(23, 13065972, 21510594, 0, 2444823222),
-        Vmstat::Cpu.new(24, 19816643, 22266295, 0, 2437316848),
-        Vmstat::Cpu.new(25, 19200341, 26748441, 0, 2433451000),
-        Vmstat::Cpu.new(26, 13374474, 19619834, 0, 2446405472),
-        Vmstat::Cpu.new(27, 13564039, 21816225, 0, 2444019515),
-        Vmstat::Cpu.new(28, 20489701, 23125551, 0, 2435784523),
-        Vmstat::Cpu.new(29, 19970999, 27198273, 0, 2432230501),
-        Vmstat::Cpu.new(30, 14676176, 20310412, 0, 2444413183),
-        Vmstat::Cpu.new(31, 14400967, 22515695, 0, 2442483106)
-      ])
+                          Vmstat::Cpu.new(0, 64_919_001, 89_137_335, 0, 2_325_343_762),
+                          Vmstat::Cpu.new(1, 78_174_710, 78_457_429, 0, 2_322_767_706),
+                          Vmstat::Cpu.new(2, 38_603_497, 50_617_796, 0, 2_390_178_542),
+                          Vmstat::Cpu.new(3, 42_552_751, 46_044_221, 0, 2_390_802_861),
+                          Vmstat::Cpu.new(4, 18_826_062, 23_983_506, 0, 2_436_590_263),
+                          Vmstat::Cpu.new(5, 17_800_281, 25_630_307, 0, 2_435_969_240),
+                          Vmstat::Cpu.new(6, 22_325_909, 24_414_413, 0, 2_432_659_504),
+                          Vmstat::Cpu.new(7, 20_896_150, 28_094_309, 0, 2_430_409_364),
+                          Vmstat::Cpu.new(8, 15_412_864, 20_799_721, 0, 2_443_187_236),
+                          Vmstat::Cpu.new(9, 15_016_328, 23_787_482, 0, 2_440_596_009),
+                          Vmstat::Cpu.new(10, 21_771_975, 30_059_932, 0, 2_427_567_910),
+                          Vmstat::Cpu.new(11, 20_183_500, 27_388_335, 0, 2_431_827_979),
+                          Vmstat::Cpu.new(12, 15_298_846, 21_276_397, 0, 2_442_824_569),
+                          Vmstat::Cpu.new(13, 13_929_592, 22_081_759, 0, 2_443_388_458),
+                          Vmstat::Cpu.new(14, 21_278_693, 23_352_419, 0, 2_434_768_696),
+                          Vmstat::Cpu.new(15, 19_834_642, 27_050_642, 0, 2_432_514_522),
+                          Vmstat::Cpu.new(16, 20_984_253, 21_833_225, 0, 2_436_582_325),
+                          Vmstat::Cpu.new(17, 17_568_236, 29_580_663, 0, 2_432_250_902),
+                          Vmstat::Cpu.new(18, 13_608_419, 18_480_841, 0, 2_447_310_538),
+                          Vmstat::Cpu.new(19, 12_552_980, 20_384_068, 0, 2_446_462_748),
+                          Vmstat::Cpu.new(20, 18_713_575, 20_976_077, 0, 2_439_710_143),
+                          Vmstat::Cpu.new(21, 18_770_245, 26_063_716, 0, 2_434_565_830),
+                          Vmstat::Cpu.new(22, 12_784_738, 18_718_466, 0, 2_447_896_586),
+                          Vmstat::Cpu.new(23, 13_065_972, 21_510_594, 0, 2_444_823_222),
+                          Vmstat::Cpu.new(24, 19_816_643, 22_266_295, 0, 2_437_316_848),
+                          Vmstat::Cpu.new(25, 19_200_341, 26_748_441, 0, 2_433_451_000),
+                          Vmstat::Cpu.new(26, 13_374_474, 19_619_834, 0, 2_446_405_472),
+                          Vmstat::Cpu.new(27, 13_564_039, 21_816_225, 0, 2_444_019_515),
+                          Vmstat::Cpu.new(28, 20_489_701, 23_125_551, 0, 2_435_784_523),
+                          Vmstat::Cpu.new(29, 19_970_999, 27_198_273, 0, 2_432_230_501),
+                          Vmstat::Cpu.new(30, 14_676_176, 20_310_412, 0, 2_444_413_183),
+                          Vmstat::Cpu.new(31, 14_400_967, 22_515_695, 0, 2_442_483_106)
+                        ])
     end
   end
 
-  context "#memory" do
+  context '#memory' do
     subject { solaris.memory }
 
     it { is_expected.to be_a(Vmstat::Memory) }
     if `getconf PAGESIZE`.chomp.to_i == 4096
       it do
-        is_expected.to eq(Vmstat::Memory.new(4096, 409145, 9018, 0, 61103, 0, 0))
+        is_expected.to eq(Vmstat::Memory.new(4096, 409_145, 9018, 0, 61_103, 0, 0))
       end
     end
   end
 
-  context "#boot_time" do
+  context '#boot_time' do
     subject { solaris.boot_time }
 
     it { is_expected.to be_a(Time) }
-    it { is_expected.to eq(Time.at(1470765992)) }
+    it { is_expected.to eq(Time.at(1_470_765_992)) }
   end
 
-  context "#network_interfaces" do
+  context '#network_interfaces' do
     subject { solaris.network_interfaces }
 
     it { is_expected.to be_a(Array) }
     it do
       is_expected.to eq([
-        Vmstat::NetworkInterface.new(:e1000g0, 1000, 0, 0, 2000, 1,
-                                     Vmstat::NetworkInterface::ETHERNET_TYPE)
-      ])
+                          Vmstat::NetworkInterface.new(:e1000g0, 1000, 0, 0, 2000, 1,
+                                                       Vmstat::NetworkInterface::ETHERNET_TYPE)
+                        ])
     end
   end
 end
