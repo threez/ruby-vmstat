@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 module Vmstat
   # Gathered disk statistics snapshot.
   # @attr [Symbol] type
@@ -14,7 +16,7 @@ module Vmstat
   #   Available blocks in the file system.
   # @attr [Fixnum] total_blocks
   #   Total number of blocks in the file system.
-  class Disk < Struct.new(:type, :origin, :mount, :block_size, 
+  class Disk < Struct.new(:type, :origin, :mount, :block_size,
                           :free_blocks, :available_blocks, :total_blocks)
     # Calculates the number of free bytes for the file system.
     # @return [Fixnum] number of free bytes
