@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 module Vmstat
   # This is a stub module that should be replaced by system specific
   # implementations of the different functions. This can either be native or
@@ -24,7 +26,7 @@ module Vmstat
     # @return [Vmstat::Disk] the disk information
     # @example
     #   Vmstat.disk("/") # => #<struct Vmstat::Disk type=:hfs, ...>
-    def self.disk(path)
+    def self.disk(_path)
       nil
     end
 
