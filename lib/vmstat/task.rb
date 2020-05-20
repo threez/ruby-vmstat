@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 module Vmstat
   # Per task performance metrics snapshot.
   # @attr [Fixnum] virtual_size
