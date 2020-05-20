@@ -1,9 +1,11 @@
+# frozen_string_literal: true
+
 module Vmstat
   module Solaris
     module ClassMethods
       def cpu
         kstat = `kstat -p "cpu_stat:::/idle|kernel|user/"`
-        cpus = Hash.new { |h, k| h[k] = Hash.new }
+        cpus = Hash.new { |h, k| h[k] = {} }
 
         kstat.lines.each do |line|
           _, cpu, _, key, value = line.strip.split(/:|\s+/)
@@ -11,7 +13,7 @@ module Vmstat
         end
 
         cpus.map do |num, v|
-          Cpu.new(num, v["user"].to_i, v["kernel"].to_i, 0, v["idle"].to_i)
+          Cpu.new(num, v['user'].to_i, v['kernel'].to_i, 0, v['idle'].to_i)
         end
       end
 
@@ -21,7 +23,7 @@ module Vmstat
 
       def memory
         kstat = `kstat -p -n system_pages`
-        values = Hash.new
+        values = {}
 
         kstat.lines.each do |line|
           _, _, _, key, value = line.strip.split(/:|\s+/)
@@ -37,13 +39,13 @@ module Vmstat
                    total - free - locked, # active
                    0, # inactive
                    free, # free
-                   0, #pageins
-                   0) #pageouts
+                   0, # pageins
+                   0) # pageouts
       end
 
       def network_interfaces
         kstat = `kstat -p link:::`
-        itfs = Hash.new { |h, k| h[k] = Hash.new }
+        itfs = Hash.new { |h, k| h[k] = {} }
 
         kstat.lines.each do |line|
           _, _, name, key, value = line.strip.split(/:|\s+/)
@@ -52,23 +54,34 @@ module Vmstat
 
         itfs.map do |k, v|
           NetworkInterface.new(k, v['rbytes64'].to_i,
-                                  v['ierrors'].to_i,
-                                  0,
-                                  v['obytes64'].to_i,
-                                  v['oerrors'].to_i,
-                                  NetworkInterface::ETHERNET_TYPE)
+                               v['ierrors'].to_i,
+                               0,
+                               v['obytes64'].to_i,
+                               v['oerrors'].to_i,
+                               NetworkInterface::ETHERNET_TYPE)
         end
       end
     end
 
     extend ClassMethods
 
-    def self.included base
+    def self.included(base)
       base.instance_eval do
-        def cpu; Vmstat::Solaris.cpu end
-        def boot_time; Vmstat::Solaris.boot_time end
-        def memory; Vmstat::Solaris.memory end
-        def network_interfaces; Vmstat::Solaris.network_interfaces end
+        def cpu
+          Vmstat::Solaris.cpu
+        end
+
+        def boot_time
+          Vmstat::Solaris.boot_time
+        end
+
+        def memory
+          Vmstat::Solaris.memory
+        end
+
+        def network_interfaces
+          Vmstat::Solaris.network_interfaces
+        end
       end
     end
   end
