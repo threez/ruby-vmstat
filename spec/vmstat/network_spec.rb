@@ -1,22 +1,24 @@
+# frozen_string_literal: true
+
 require 'spec_helper'
 
 describe Vmstat::NetworkInterface do
-  context "Vmstat#network" do
+  context 'Vmstat#network' do
     let(:network) { Vmstat.network_interfaces }
 
-    it "should return the enthernet and loopback network data as an array" do
+    it 'should return the enthernet and loopback network data as an array' do
       expect(network).to be_a(Array)
     end
 
-    context "loopback device" do
-      let(:loopback) { network.find { |interface| interface.loopback? } }
+    context 'loopback device' do
+      let(:loopback) { network.find(&:loopback?) }
       subject { loopback }
 
-      it "should be a vmstat network interface object" do
+      it 'should be a vmstat network interface object' do
         is_expected.to be_a(described_class)
       end
 
-      context "methods" do
+      context 'methods' do
         it { is_expected.to respond_to(:in_bytes) }
         it { is_expected.to respond_to(:out_bytes) }
         it { is_expected.to respond_to(:in_errors) }
@@ -25,7 +27,7 @@ describe Vmstat::NetworkInterface do
         it { is_expected.to respond_to(:type) }
       end
 
-      context "content" do
+      context 'content' do
         describe '#in_bytes' do
           subject { super().in_bytes }
           it { is_expected.to be_a_kind_of(Numeric) }
