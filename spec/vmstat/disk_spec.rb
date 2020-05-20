@@ -1,9 +1,13 @@
+# frozen_string_literal: true
+
 require 'spec_helper'
 
 describe Vmstat::Disk do
-  context "sample" do
-    let(:disk) { described_class.new :hfs, "/dev/disk0", "/mnt/test",
-                                     4096, 100, 200, 600 }
+  context 'sample' do
+    let(:disk) do
+      described_class.new :hfs, '/dev/disk0', '/mnt/test',
+                          4096, 100, 200, 600
+    end
     subject { disk }
 
     describe '#type' do
@@ -13,12 +17,12 @@ describe Vmstat::Disk do
 
     describe '#origin' do
       subject { super().origin }
-      it { is_expected.to eq("/dev/disk0") }
+      it { is_expected.to eq('/dev/disk0') }
     end
 
     describe '#mount' do
       subject { super().mount }
-      it { is_expected.to eq("/mnt/test") }
+      it { is_expected.to eq('/mnt/test') }
     end
 
     describe '#block_size' do
@@ -43,34 +47,34 @@ describe Vmstat::Disk do
 
     describe '#free_bytes' do
       subject { super().free_bytes }
-      it { is_expected.to eq(409600) }
+      it { is_expected.to eq(409_600) }
     end
 
     describe '#available_bytes' do
       subject { super().available_bytes }
-      it { is_expected.to eq(819200) }
+      it { is_expected.to eq(819_200) }
     end
 
     describe '#used_bytes' do
       subject { super().used_bytes }
-      it { is_expected.to eq(2048000) }
+      it { is_expected.to eq(2_048_000) }
     end
 
     describe '#total_bytes' do
       subject { super().total_bytes }
-      it { is_expected.to eq(2457600) }
+      it { is_expected.to eq(2_457_600) }
     end
   end
 
-  context "Vmstat#disk" do
-    let(:disk) { Vmstat.disk("/") }
+  context 'Vmstat#disk' do
+    let(:disk) { Vmstat.disk('/') }
     subject { disk }
 
-    it "should be a vmstat disk object" do
+    it 'should be a vmstat disk object' do
       is_expected.to be_a(described_class)
     end
 
-    context "methods" do
+    context 'methods' do
       it { is_expected.to respond_to(:type) }
       it { is_expected.to respond_to(:origin) }
       it { is_expected.to respond_to(:mount) }
@@ -79,8 +83,8 @@ describe Vmstat::Disk do
       it { is_expected.to respond_to(:used_bytes) }
       it { is_expected.to respond_to(:total_bytes) }
     end
-    
-    context "content" do
+
+    context 'content' do
       describe '#type' do
         subject { super().type }
         it { is_expected.to be_a(Symbol) }
