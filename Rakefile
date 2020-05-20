@@ -6,7 +6,6 @@ require 'rspec/core/rake_task'
 require 'rbconfig'
 
 extension = RbConfig::CONFIG['DLEXT']
-puts "EXTENSION: #{extension}"
 
 CLEAN.include(
   '**/*.gem',         # Gem files
