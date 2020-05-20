@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 module Vmstat
   # Snapshots help to gather information about the whole system quickly.
   # @attr [Time] at the timestamp, when the snapshot was created.
