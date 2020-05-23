@@ -1,8 +1,9 @@
 language: ruby
-os:
-  - linux
-  - osx:
-    - osx_image: xcode11.4
+jobs:
+  include:
+    - os: linux
+    - os: osx
+      osx_image: xcode11.4
 rvm:
   - ruby-2.5.6
   - ruby-2.6.8
