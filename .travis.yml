@@ -6,4 +6,4 @@ jobs:
       osx_image: xcode11.4
 rvm:
   - ruby-2.5.6
-  - ruby-2.6.8
+  - ruby-2.6.6
