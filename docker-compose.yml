@@ -1,0 +1,8 @@
+version: '2.0'
+services:
+  ruby-vmstat:
+    build: .
+    volumes:
+    - ./lib:/usr/src/app/lib
+    - ./ext:/usr/src/app/ext
+    - ./spec:/usr/src/app/spec

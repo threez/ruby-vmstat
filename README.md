@@ -132,6 +132,17 @@ Just require the library and make a snapshot or use the distinct methods to just
 	#	   user_time_ms=28,
 	#	   system_time_ms=83>>
 
+## Test
+
+Development
+
+	docker-compose up
+
+Single test build and run:
+
+	docker build -t ruby-vmstat .
+	docker run --rm -ti ruby-vmstat rake spec
+
 ## Todo
 
 * Swap information

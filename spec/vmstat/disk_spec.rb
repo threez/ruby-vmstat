@@ -81,9 +81,13 @@ describe Vmstat::Disk do
     end
     
     context "content" do
-      describe '#type' do
-        subject { super().type }
-        it { is_expected.to be_a(Symbol) }
+      # inside docker we may not have directory mounted on
+      # a physical drive
+      unless docker?
+        describe '#type' do
+          subject { super().type }
+          it { is_expected.to be_a(Symbol) }
+        end
       end
 
       describe '#origin' do

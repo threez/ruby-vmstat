@@ -5,12 +5,25 @@
 #
 # See http://rubydoc.info/gems/rspec-core/RSpec/Core/Configuration
 $:.unshift(File.expand_path("../lib", __FILE__))
+
+# load extension
+begin
+  require "vmstat/vmstat"
+rescue LoadError => exception
+  puts "Extension not compiled yet, compiling ..."
+  system "rake compile"
+end
+
 require 'vmstat'
 require 'ostruct'
 require 'timecop'
 
 def travis?
   ENV['TRAVIS'] == 'true'
+end
+
+def docker?
+  File.exists?("/.dockerenv")
 end
 
 RSpec.configure do |config|
